@@ -145,32 +145,14 @@ func (c *Client) Call(method, path string, body, v interface{}) error {
 		// log error
 		return err
 	}
-	var respMap map[string]interface{}
+	var respMap Response
 	json.Unmarshal(respBody, &respMap)
 	// fmt.Printf("RESPONSE %s \n %+v", u, respMap)
 
 	if status, _ := respMap["status"].(bool); !status && resp.StatusCode >= 400 {
-		err := &Error{
-			HTTPStatusCode: resp.StatusCode,
-			Message:        respMap["message"].(string),
-			URL:            resp.Request.URL,
-		}
-		if errorDetails, ok := respMap["errors"]; ok {
-			err.Errors = errorDetails.(map[string][]interface{})
-		}
-		return err
+		return responseToError(resp, respMap)
 	}
-	if data, ok := respMap["data"]; ok {
-		switch t := respMap["data"].(type) {
-		case map[string]interface{}:
-			return mapstruct(data, v)
-		default:
-			_ = t
-			return mapstruct(respMap, v)
-		}
-	}
-	// response data does not contain data node, return anyways
-	return mapstruct(respMap, v)
+	return checkResponse(respMap, v)
 }
 
 func (c *Client) ResolveCardBIN(bin int) (*Response, error) {
@@ -181,7 +163,13 @@ func (c *Client) ResolveCardBIN(bin int) (*Response, error) {
 	return resp, err
 }
 
-// internals
+func (c *Client) CheckBalance(bin int) (*Response, error) {
+	resp := &Response{}
+	err := c.Call("GET", "balance", nil, resp)
+	return resp, err
+}
+
+// INTERNALS
 func paginateURL(path string, count, offset int) string {
 	return fmt.Sprintf("%s?perPage=%d&page=%d", path, count, offset)
 }
@@ -207,4 +195,30 @@ func getTestKey() string {
 	}
 
 	return key
+}
+
+func responseToError(resp *http.Response, respMap Response) error {
+	err := &Error{
+		HTTPStatusCode: resp.StatusCode,
+		Message:        respMap["message"].(string),
+		URL:            resp.Request.URL,
+	}
+	if errorDetails, ok := respMap["errors"]; ok {
+		err.Errors = errorDetails.(map[string][]interface{})
+	}
+	return err
+}
+
+func checkResponse(respMap Response, v interface{}) error {
+	if data, ok := respMap["data"]; ok {
+		switch t := respMap["data"].(type) {
+		case map[string]interface{}:
+			return mapstruct(data, v)
+		default:
+			_ = t
+			return mapstruct(respMap, v)
+		}
+	}
+	// response data does not contain data node, return anyways
+	return mapstruct(respMap, v)
 }
