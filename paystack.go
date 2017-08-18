@@ -44,18 +44,16 @@ type Client struct {
 
 	// Services supported by the Paystack API.
 	// Miscellaneous actions are directly implemented on the Client object
-	Customer          *CustomerService
-	Transaction       *TransactionService
-	SubAccount        *SubAccountService
-	Plan              *PlanService
-	SubScription      *SubscriptionService
-	Page              *PageService
-	Settlement        *SettlementService
-	Transfer          *TransferService
-	TransferRecipient *TransferRecipientService
-	BulkCharge        *BulkChargeService
-	Charge            *ChargeService
-	Bank              *BankService
+	Customer     *CustomerService
+	Transaction  *TransactionService
+	SubAccount   *SubAccountService
+	Plan         *PlanService
+	SubScription *SubscriptionService
+	Page         *PageService
+	Settlement   *SettlementService
+	Transfer     *TransferService
+	Charge       *ChargeService
+	Bank         *BankService
 }
 
 type Metadata map[string]interface{}
@@ -103,8 +101,6 @@ func NewClient(key string, httpClient *http.Client) *Client {
 	c.Page = (*PageService)(&c.common)
 	c.Settlement = (*SettlementService)(&c.common)
 	c.Transfer = (*TransferService)(&c.common)
-	c.TransferRecipient = (*TransferRecipientService)(&c.common)
-	c.BulkCharge = (*BulkChargeService)(&c.common)
 	c.Charge = (*ChargeService)(&c.common)
 	c.Bank = (*BankService)(&c.common)
 
