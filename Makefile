@@ -1,0 +1,54 @@
+# Project name
+PROJECT = paystack
+
+# Set an output prefix, which is the local directory if not specified
+PREFIX?=$(shell pwd)
+BUILDTAGS=
+GLIDE = $(shell which glide)
+
+# Paystack test key
+PAYSTACK_KEY=sk_test_b748a89ad84f35c2f1a8b81681f956274de048bb
+
+.PHONY: clean all fmt vet lint build test install static deps docker
+.DEFAULT: default
+
+all: clean build fmt lint test vet install
+
+build:
+	@echo "+ $@"
+	@go build -tags "$(BUILDTAGS) cgo" .
+
+static:
+	@echo "+ $@"
+	CGO_ENABLED=1 go build -tags "$(BUILDTAGS) cgo static_build" -ldflags "-w -extldflags -static" -o reg .
+
+fmt:
+	@echo "+ $@"
+	@gofmt -s -l . | grep -v vendor | tee /dev/stderr
+
+lint:
+	@echo "+ $@"
+	@golint ./... | grep -v vendor | tee /dev/stderr
+
+test: fmt lint vet
+	@echo "+ $@"
+	@PAYSTACK_KEY=$(PAYSTACK_KEY) go test -v -tags "$(BUILDTAGS) cgo" $(shell go list ./... | grep -v vendor)
+
+vet:
+	@echo "+ $@"
+	@go vet $(shell go list ./... | grep -v vendor)
+
+clean:
+	@echo "+ $@"
+	@rm -rf reg
+
+install:
+	@echo "+ $@"
+	@go install .
+
+deps:
+	@echo "Installing dependencies..."
+	@$(GLIDE) install
+
+docker:
+	@docker build . -t $(PROJECT)

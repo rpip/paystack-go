@@ -1,0 +1,3 @@
+package: github.com/rpip/paystack
+import:
+- package: github.com/mitchellh/mapstructure
