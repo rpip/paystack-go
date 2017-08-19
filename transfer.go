@@ -75,9 +75,8 @@ type TransferRecipientList struct {
 // Initialize initiates a new transfer
 // For more details see https://developers.paystack.co/v1.0/reference#initiate-transfer
 func (s *TransferService) Initialize(req *TransferRequest) (*Transfer, error) {
-	u := fmt.Sprintf("/transfer")
 	transfer := &Transfer{}
-	err := s.client.Call("POST", u, req, transfer)
+	err := s.client.Call("POST", "/transfer", req, transfer)
 
 	return transfer, err
 }

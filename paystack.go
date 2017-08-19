@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"net/url"
 	"os"
@@ -42,6 +43,7 @@ type Client struct {
 
 	baseURL *url.URL
 
+	logger Logger
 	// Services supported by the Paystack API.
 	// Miscellaneous actions are directly implemented on the Client object
 	Customer     *CustomerService
@@ -54,6 +56,14 @@ type Client struct {
 	Transfer     *TransferService
 	Charge       *ChargeService
 	Bank         *BankService
+	BulkCharge   *BulkChargeService
+
+	LoggingEnabled bool
+	Logger         Logger
+}
+
+type Logger interface {
+	Printf(format string, v ...interface{})
 }
 
 type Metadata map[string]interface{}
@@ -90,7 +100,13 @@ func NewClient(key string, httpClient *http.Client) *Client {
 	}
 
 	u, _ := url.Parse(baseURL)
-	c := &Client{client: httpClient, key: key, baseURL: u}
+	c := &Client{
+		client:         httpClient,
+		key:            key,
+		baseURL:        u,
+		LoggingEnabled: true,
+		Logger:         log.New(os.Stderr, "", log.LstdFlags),
+	}
 
 	c.common.client = c
 	c.Customer = (*CustomerService)(&c.common)
@@ -103,6 +119,7 @@ func NewClient(key string, httpClient *http.Client) *Client {
 	c.Transfer = (*TransferService)(&c.common)
 	c.Charge = (*ChargeService)(&c.common)
 	c.Bank = (*BankService)(&c.common)
+	c.BulkCharge = (*BulkChargeService)(&c.common)
 
 	return c
 }
@@ -121,6 +138,9 @@ func (c *Client) Call(method, path string, body, v interface{}) error {
 	req, err := http.NewRequest(method, u.String(), buf)
 
 	if err != nil {
+		if c.LoggingEnabled {
+			c.Logger.Printf("Cannot create Paystack request: %v\n", err)
+		}
 		return err
 	}
 
@@ -134,22 +154,38 @@ func (c *Client) Call(method, path string, body, v interface{}) error {
 		req.Header.Set("User-Agent", userAgent+" "+ua)
 	}
 
+	if c.LoggingEnabled {
+		c.Logger.Printf("Requesting %v %v%v\n", req.Method, req.URL.Host, req.URL.Path)
+	}
+
+	start := time.Now()
+
 	resp, err := c.client.Do(req)
 	if err != nil {
 		return err
 	}
-	defer resp.Body.Close()
 
+	if c.LoggingEnabled {
+		c.Logger.Printf("Completed in %v\n", time.Since(start))
+	}
+
+	defer resp.Body.Close()
 	respBody, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		// log error
+		if c.LoggingEnabled {
+			c.Logger.Printf("Request to Paystack failed: %v\n", err)
+		}
 		return err
 	}
+
 	var respMap Response
 	json.Unmarshal(respBody, &respMap)
 	// fmt.Printf("RESPONSE %s \n %+v", u, respMap)
 
 	if status, _ := respMap["status"].(bool); !status && resp.StatusCode >= 400 {
+		if c.LoggingEnabled {
+			c.Logger.Printf("Paystack error: %v\n", err)
+		}
 		return responseToError(resp, respMap)
 	}
 	return checkResponse(respMap, v)
@@ -166,6 +202,21 @@ func (c *Client) ResolveCardBIN(bin int) (*Response, error) {
 func (c *Client) CheckBalance(bin int) (*Response, error) {
 	resp := &Response{}
 	err := c.Call("GET", "balance", nil, resp)
+	return resp, err
+}
+
+func (c *Client) GetSessionTimeout() (*Response, error) {
+	resp := &Response{}
+	err := c.Call("GET", "/integration/payment_session_timeout", nil, resp)
+	return resp, err
+}
+
+func (c *Client) UpdateSessionTimeout(timeout int) (*Response, error) {
+	data := url.Values{}
+	data.Add("timeout", string(timeout))
+	resp := &Response{}
+	u := "/integration/payment_session_timeout"
+	err := c.Call("PUT", u, data, resp)
 	return resp, err
 }
 
