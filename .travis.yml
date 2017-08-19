@@ -13,5 +13,5 @@ install:
   - go get github.com/golang/lint/golint
   - go get github.com/Masterminds/glide
 script:
-  - glide install
+  - make deps
   - make
