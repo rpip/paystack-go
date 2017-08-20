@@ -54,7 +54,6 @@ func (s *SubscriptionService) Create(subscription *Subscription) (*Subscription,
 	u := fmt.Sprintf("/subscription")
 	sub := &Subscription{}
 	err := s.client.Call("POST", u, subscription, sub)
-
 	return sub, err
 }
 
@@ -64,7 +63,6 @@ func (s *SubscriptionService) Update(subscription *Subscription) (*Subscription,
 	u := fmt.Sprintf("subscription/%d", subscription.ID)
 	sub := &Subscription{}
 	err := s.client.Call("PUT", u, subscription, sub)
-
 	return sub, err
 }
 
@@ -74,7 +72,6 @@ func (s *SubscriptionService) Get(id int) (*Subscription, error) {
 	u := fmt.Sprintf("/subscription/%d", id)
 	sub := &Subscription{}
 	err := s.client.Call("GET", u, nil, sub)
-
 	return sub, err
 }
 
@@ -99,7 +96,6 @@ func (s *SubscriptionService) Enable(subscriptionCode, emailToken string) (*Resp
 	params.Add("token", emailToken)
 	resp := &Response{}
 	err := s.client.Call("POST", "/subscription/enable", params, resp)
-
 	return resp, err
 }
 
@@ -109,6 +105,5 @@ func (s *SubscriptionService) Disable(subscriptionCode, emailToken string) (*Res
 	params.Add("token", emailToken)
 	resp := &Response{}
 	err := s.client.Call("POST", "/subscription/disable", params, resp)
-
 	return resp, err
 }

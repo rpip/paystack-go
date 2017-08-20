@@ -77,7 +77,6 @@ type TransferRecipientList struct {
 func (s *TransferService) Initialize(req *TransferRequest) (*Transfer, error) {
 	transfer := &Transfer{}
 	err := s.client.Call("POST", "/transfer", req, transfer)
-
 	return transfer, err
 }
 
@@ -88,10 +87,8 @@ func (s *TransferService) Finalize(code, otp string) (*Response, error) {
 	req := url.Values{}
 	req.Add("transfer_code", code)
 	req.Add("otp", otp)
-
 	resp := &Response{}
 	err := s.client.Call("POST", u, req, resp)
-
 	return resp, err
 }
 
@@ -101,7 +98,6 @@ func (s *TransferService) BulkRequest(req *BulkTransfer) (*Response, error) {
 	u := fmt.Sprintf("/transfer")
 	resp := &Response{}
 	err := s.client.Call("POST", u, req, resp)
-
 	return resp, err
 }
 
@@ -111,7 +107,6 @@ func (s *TransferService) Get(idCode string) (*Transfer, error) {
 	u := fmt.Sprintf("/transfer/%s", idCode)
 	transfer := &Transfer{}
 	err := s.client.Call("GET", u, nil, transfer)
-
 	return transfer, err
 }
 
@@ -142,7 +137,6 @@ func (s *TransferService) ListRecipientsN(count, offset int) (*TransferRecipient
 	u := paginateURL("/transferrecipient", count, offset)
 	resp := &TransferRecipientList{}
 	err := s.client.Call("GET", u, nil, resp)
-
 	return resp, err
 }
 
@@ -152,7 +146,6 @@ func (s *TransferService) ResendOTP(transferCode, reason string) (*Response, err
 	data.Add("reason", reason)
 	resp := &Response{}
 	err := s.client.Call("POST", "/transfer/resend_otp", data, resp)
-
 	return resp, err
 }
 

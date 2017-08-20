@@ -43,7 +43,6 @@ type ChargeRequest struct {
 func (s *ChargeService) Create(req *ChargeRequest) (*Response, error) {
 	resp := &Response{}
 	err := s.client.Call("POST", "/charge", req, resp)
-
 	return resp, err
 }
 
@@ -52,7 +51,6 @@ func (s *ChargeService) Create(req *ChargeRequest) (*Response, error) {
 func (s *ChargeService) Tokenize(req *ChargeRequest) (*Response, error) {
 	resp := &Response{}
 	err := s.client.Call("POST", "/charge/tokenize", req, resp)
-
 	return resp, err
 }
 
@@ -64,7 +62,6 @@ func (s *ChargeService) SubmitPIN(pin, reference string) (*Response, error) {
 	data.Add("reference", reference)
 	resp := &Response{}
 	err := s.client.Call("POST", "/charge/submit_pin", data, resp)
-
 	return resp, err
 }
 
@@ -76,7 +73,6 @@ func (s *ChargeService) SubmitOTP(otp, reference string) (*Response, error) {
 	data.Add("reference", reference)
 	resp := &Response{}
 	err := s.client.Call("POST", "/charge/submit_otp", data, resp)
-
 	return resp, err
 }
 
@@ -88,7 +84,6 @@ func (s *ChargeService) SubmitPhone(phone, reference string) (*Response, error) 
 	data.Add("reference", reference)
 	resp := &Response{}
 	err := s.client.Call("POST", "/charge/submit_phone", data, resp)
-
 	return resp, err
 }
 
@@ -100,7 +95,6 @@ func (s *ChargeService) SubmitBirthday(birthday, reference string) (*Response, e
 	data.Add("reference", reference)
 	resp := &Response{}
 	err := s.client.Call("POST", "/charge/submit_birthday", data, resp)
-
 	return resp, err
 }
 
@@ -112,6 +106,5 @@ func (s *ChargeService) Get(reference string) (*Response, error) {
 	u := fmt.Sprintf("/charge/%s", reference)
 	resp := &Response{}
 	err := s.client.Call("GET", u, nil, resp)
-
 	return resp, err
 }

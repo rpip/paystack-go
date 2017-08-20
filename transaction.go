@@ -97,7 +97,6 @@ func (s *TransactionService) InitializeTransaction(txn *TransactionRequest) (*Re
 	u := fmt.Sprintf("/transaction/initialize")
 	resp := &Response{}
 	err := s.client.Call("POST", u, txn, resp)
-
 	return resp, err
 }
 
@@ -105,7 +104,6 @@ func (s *TransactionService) VerifyTransaction(reference string) (*Transaction, 
 	u := fmt.Sprintf("/transaction/verify/%s", reference)
 	txn := &Transaction{}
 	err := s.client.Call("GET", u, nil, txn)
-
 	return txn, err
 }
 
@@ -130,14 +128,12 @@ func (s *TransactionService) Get(id string) (*Transaction, error) {
 	u := fmt.Sprintf("/transaction/%s", id)
 	txn := &Transaction{}
 	err := s.client.Call("GET", u, nil, txn)
-
 	return txn, err
 }
 
 func (s *TransactionService) ChargeAuthorization(req *TransactionRequest) (*Transaction, error) {
 	txn := &Transaction{}
 	err := s.client.Call("POST", "/transaction/charge_authorization", req, txn)
-
 	return txn, err
 }
 
@@ -147,7 +143,6 @@ func (s *TransactionService) Timeline(reference string) (*TransactionTimeline, e
 	u := fmt.Sprintf("/transaction/timeline/%s", reference)
 	timeline := &TransactionTimeline{}
 	err := s.client.Call("GET", u, nil, timeline)
-
 	return timeline, err
 }
 
@@ -157,7 +152,6 @@ func (s *TransactionService) Totals() (*Response, error) {
 	u := fmt.Sprintf("/transaction/totals")
 	resp := &Response{}
 	err := s.client.Call("GET", u, nil, resp)
-
 	return resp, err
 }
 
@@ -167,7 +161,6 @@ func (s *TransactionService) Export(params RequestValues) (*Response, error) {
 	u := fmt.Sprintf("/transaction/export")
 	resp := &Response{}
 	err := s.client.Call("GET", u, nil, resp)
-
 	return resp, err
 }
 
@@ -175,7 +168,6 @@ func (s *TransactionService) ReAuthorize(req AuthorizationRequest) (*Response, e
 	u := fmt.Sprintf("/transaction/request_reauthorization")
 	resp := &Response{}
 	err := s.client.Call("POST", u, nil, resp)
-
 	return resp, err
 }
 
@@ -183,6 +175,5 @@ func (s *TransactionService) CheckAuthorization(req AuthorizationRequest) (*Resp
 	u := fmt.Sprintf("/transaction/check_reauthorization")
 	resp := &Response{}
 	err := s.client.Call("POST", u, nil, resp)
-
 	return resp, err
 }

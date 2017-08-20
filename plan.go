@@ -37,7 +37,6 @@ func (s *PlanService) Create(plan *Plan) (*Plan, error) {
 	u := fmt.Sprintf("/plan")
 	plan2 := &Plan{}
 	err := s.client.Call("POST", u, plan, plan2)
-
 	return plan2, err
 }
 
@@ -47,7 +46,6 @@ func (s *PlanService) Update(plan *Plan) (*Response, error) {
 	u := fmt.Sprintf("plan/%d", plan.ID)
 	resp := &Response{}
 	err := s.client.Call("PUT", u, plan, resp)
-
 	return resp, err
 }
 
@@ -57,7 +55,6 @@ func (s *PlanService) Get(id int) (*Plan, error) {
 	u := fmt.Sprintf("/plan/%d", id)
 	plan2 := &Plan{}
 	err := s.client.Call("GET", u, nil, plan2)
-
 	return plan2, err
 }
 

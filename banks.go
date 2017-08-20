@@ -11,7 +11,6 @@ type BankService service
 func (s *BankService) List() (*Response, error) {
 	resp := &Response{}
 	err := s.client.Call("GET", "/bank", nil, resp)
-
 	return resp, err
 }
 
@@ -19,7 +18,6 @@ func (s *BankService) ResolveBVN(bvn string) (*Response, error) {
 	u := fmt.Sprintf("/bank/resolve_bvn/%s", bvn)
 	resp := &Response{}
 	err := s.client.Call("GET", u, nil, resp)
-
 	return resp, err
 }
 
@@ -27,6 +25,5 @@ func (s *BankService) ResolveAccountNumber(account_number, bank_code int) (*Resp
 	u := fmt.Sprintf("/bank/resolve?account_number=%d&bank_code=%d", account_number, bank_code)
 	resp := &Response{}
 	err := s.client.Call("GET", u, nil, resp)
-
 	return resp, err
 }

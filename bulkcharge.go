@@ -34,7 +34,6 @@ type BulkChargeBatchList struct {
 func (s *BulkChargeService) Initiate(req []*BulkChargeRequest) (*BulkChargeBatch, error) {
 	bulkcharge := &BulkChargeBatch{}
 	err := s.client.Call("POST", "bulkcharge", req, bulkcharge)
-
 	return bulkcharge, err
 }
 
@@ -62,7 +61,6 @@ func (s *BulkChargeService) Get(idCode string) (*BulkChargeBatch, error) {
 	u := fmt.Sprintf("/bulkcharge/%s", idCode)
 	bulkcharge := &BulkChargeBatch{}
 	err := s.client.Call("GET", u, nil, bulkcharge)
-
 	return bulkcharge, err
 }
 
@@ -75,7 +73,6 @@ func (s *BulkChargeService) GetBatchCharges(idCode string) (*Response, error) {
 	u := fmt.Sprintf("/bulkcharge/%s/charges", idCode)
 	resp := &Response{}
 	err := s.client.Call("GET", u, nil, resp)
-
 	return resp, err
 }
 
