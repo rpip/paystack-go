@@ -2,10 +2,7 @@ package paystack
 
 import "testing"
 
-func TestCustomer_CRUD(t *testing.T) {
-	apiKey := getTestKey()
-	c := NewClient(apiKey, nil)
-
+func TestCustomerCRUD(t *testing.T) {
 	cust := &Customer{
 		FirstName: "User123",
 		LastName:  "AdminUser",
@@ -48,9 +45,6 @@ func TestCustomer_CRUD(t *testing.T) {
 }
 
 func TestCustomerRiskAction(t *testing.T) {
-	apiKey := getTestKey()
-	c := NewClient(apiKey, nil)
-
 	cust := &Customer{
 		FirstName: "User123",
 		LastName:  "AdminUser",
