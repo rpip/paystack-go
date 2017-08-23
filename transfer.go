@@ -82,22 +82,22 @@ func (s *TransferService) Initialize(req *TransferRequest) (*Transfer, error) {
 
 // Finalize completes a transfer request
 // For more details see https://developers.paystack.co/v1.0/reference#finalize-transfer
-func (s *TransferService) Finalize(code, otp string) (*Response, error) {
+func (s *TransferService) Finalize(code, otp string) (Response, error) {
 	u := fmt.Sprintf("/transfer/finalize_transfer")
 	req := url.Values{}
 	req.Add("transfer_code", code)
 	req.Add("otp", otp)
 	resp := &Response{}
-	err := s.client.Call("POST", u, req, resp)
+	err := s.client.Call("POST", u, req, &resp)
 	return resp, err
 }
 
 // Initialize initiates a new bulk transfer
 // For more details see https://developers.paystack.co/v1.0/reference#initiate-bulk-transfer
-func (s *TransferService) BulkRequest(req *BulkTransfer) (*Response, error) {
+func (s *TransferService) BulkRequest(req *BulkTransfer) (Response, error) {
 	u := fmt.Sprintf("/transfer")
-	resp := &Response{}
-	err := s.client.Call("POST", u, req, resp)
+	resp := Response{}
+	err := s.client.Call("POST", u, req, &resp)
 	return resp, err
 }
 
@@ -136,16 +136,16 @@ func (s *TransferService) ListRecipients() (*TransferRecipientList, error) {
 func (s *TransferService) ListRecipientsN(count, offset int) (*TransferRecipientList, error) {
 	u := paginateURL("/transferrecipient", count, offset)
 	resp := &TransferRecipientList{}
-	err := s.client.Call("GET", u, nil, resp)
+	err := s.client.Call("GET", u, nil, &resp)
 	return resp, err
 }
 
-func (s *TransferService) ResendOTP(transferCode, reason string) (*Response, error) {
+func (s *TransferService) ResendOTP(transferCode, reason string) (Response, error) {
 	data := url.Values{}
 	data.Add("transfer_code", transferCode)
 	data.Add("reason", reason)
-	resp := &Response{}
-	err := s.client.Call("POST", "/transfer/resend_otp", data, resp)
+	resp := Response{}
+	err := s.client.Call("POST", "/transfer/resend_otp", data, &resp)
 	return resp, err
 }
 
@@ -153,9 +153,9 @@ func (s *TransferService) ResendOTP(transferCode, reason string) (*Response, err
 // In the event that a customer wants to stop being able to complete
 // transfers programmatically, this endpoint helps turn OTP requirement back on.
 // No arguments required.
-func (s *TransferService) EnableOTP() (*Response, error) {
-	resp := &Response{}
-	err := s.client.Call("POST", "/transfer/enable_otp", nil, resp)
+func (s *TransferService) EnableOTP() (Response, error) {
+	resp := Response{}
+	err := s.client.Call("POST", "/transfer/enable_otp", nil, &resp)
 	return resp, err
 }
 
@@ -163,16 +163,16 @@ func (s *TransferService) EnableOTP() (*Response, error) {
 // In the event that you want to be able to complete transfers
 // programmatically without use of OTPs, this endpoint helps disable that….
 // with an OTP. No arguments required. You will get an OTP.
-func (s *TransferService) DisableOTP() (*Response, error) {
-	resp := &Response{}
-	err := s.client.Call("POST", "/transfer/disable_otp", nil, resp)
+func (s *TransferService) DisableOTP() (Response, error) {
+	resp := Response{}
+	err := s.client.Call("POST", "/transfer/disable_otp", nil, &resp)
 	return resp, err
 }
 
-func (s *TransferService) FinalizeOTPDisable(otp string) (*Response, error) {
+func (s *TransferService) FinalizeOTPDisable(otp string) (Response, error) {
 	data := url.Values{}
 	data.Add("otp", otp)
-	resp := &Response{}
-	err := s.client.Call("POST", "/transfer/disable_otp_finalize", data, resp)
+	resp := Response{}
+	err := s.client.Call("POST", "/transfer/disable_otp_finalize", data, &resp)
 	return resp, err
 }

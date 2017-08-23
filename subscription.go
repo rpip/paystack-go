@@ -90,20 +90,20 @@ func (s *SubscriptionService) ListN(count, offset int) (*SubscriptionList, error
 	return sub, err
 }
 
-func (s *SubscriptionService) Enable(subscriptionCode, emailToken string) (*Response, error) {
+func (s *SubscriptionService) Enable(subscriptionCode, emailToken string) (Response, error) {
 	params := url.Values{}
 	params.Add("code", subscriptionCode)
 	params.Add("token", emailToken)
-	resp := &Response{}
-	err := s.client.Call("POST", "/subscription/enable", params, resp)
+	resp := Response{}
+	err := s.client.Call("POST", "/subscription/enable", params, &resp)
 	return resp, err
 }
 
-func (s *SubscriptionService) Disable(subscriptionCode, emailToken string) (*Response, error) {
+func (s *SubscriptionService) Disable(subscriptionCode, emailToken string) (Response, error) {
 	params := url.Values{}
 	params.Add("code", subscriptionCode)
 	params.Add("token", emailToken)
-	resp := &Response{}
-	err := s.client.Call("POST", "/subscription/disable", params, resp)
+	resp := Response{}
+	err := s.client.Call("POST", "/subscription/disable", params, &resp)
 	return resp, err
 }

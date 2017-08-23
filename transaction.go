@@ -93,10 +93,10 @@ type TransactionTimeline struct {
 
 // InitializeTransaction initiates a transaction process
 // For more details see https://developers.paystack.co/v1.0/reference#initialize-a-transaction
-func (s *TransactionService) InitializeTransaction(txn *TransactionRequest) (*Response, error) {
+func (s *TransactionService) InitializeTransaction(txn *TransactionRequest) (Response, error) {
 	u := fmt.Sprintf("/transaction/initialize")
-	resp := &Response{}
-	err := s.client.Call("POST", u, txn, resp)
+	resp := Response{}
+	err := s.client.Call("POST", u, txn, &resp)
 	return resp, err
 }
 
@@ -148,32 +148,32 @@ func (s *TransactionService) Timeline(reference string) (*TransactionTimeline, e
 
 // Totals returns total amount received on your account
 // For more details see https://developers.paystack.co/v1.0/reference#transaction-totals
-func (s *TransactionService) Totals() (*Response, error) {
+func (s *TransactionService) Totals() (Response, error) {
 	u := fmt.Sprintf("/transaction/totals")
-	resp := &Response{}
-	err := s.client.Call("GET", u, nil, resp)
+	resp := Response{}
+	err := s.client.Call("GET", u, nil, &resp)
 	return resp, err
 }
 
 // Export ...
 // For more details see https://developers.paystack.co/v1.0/reference#export-transactions
-func (s *TransactionService) Export(params RequestValues) (*Response, error) {
+func (s *TransactionService) Export(params RequestValues) (Response, error) {
 	u := fmt.Sprintf("/transaction/export")
-	resp := &Response{}
-	err := s.client.Call("GET", u, nil, resp)
+	resp := Response{}
+	err := s.client.Call("GET", u, nil, &resp)
 	return resp, err
 }
 
-func (s *TransactionService) ReAuthorize(req AuthorizationRequest) (*Response, error) {
+func (s *TransactionService) ReAuthorize(req AuthorizationRequest) (Response, error) {
 	u := fmt.Sprintf("/transaction/request_reauthorization")
-	resp := &Response{}
-	err := s.client.Call("POST", u, nil, resp)
+	resp := Response{}
+	err := s.client.Call("POST", u, nil, &resp)
 	return resp, err
 }
 
-func (s *TransactionService) CheckAuthorization(req AuthorizationRequest) (*Response, error) {
+func (s *TransactionService) CheckAuthorization(req AuthorizationRequest) (Response, error) {
 	u := fmt.Sprintf("/transaction/check_reauthorization")
-	resp := &Response{}
-	err := s.client.Call("POST", u, nil, resp)
+	resp := Response{}
+	err := s.client.Call("POST", u, nil, &resp)
 	return resp, err
 }

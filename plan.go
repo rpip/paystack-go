@@ -42,10 +42,10 @@ func (s *PlanService) Create(plan *Plan) (*Plan, error) {
 
 // Update updates a plan's properties.
 // For more details see https://developers.paystack.co/v1.0/reference#update-plan
-func (s *PlanService) Update(plan *Plan) (*Response, error) {
+func (s *PlanService) Update(plan *Plan) (Response, error) {
 	u := fmt.Sprintf("plan/%d", plan.ID)
-	resp := &Response{}
-	err := s.client.Call("PUT", u, plan, resp)
+	resp := Response{}
+	err := s.client.Call("PUT", u, plan, &resp)
 	return resp, err
 }
 

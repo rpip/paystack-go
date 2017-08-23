@@ -188,35 +188,37 @@ func (c *Client) Call(method, path string, body, v interface{}) error {
 		}
 		return responseToError(resp, respMap)
 	}
-	return checkResponse(respMap, v)
+	return c.checkResponse(respMap, v)
 }
 
-func (c *Client) ResolveCardBIN(bin int) (*Response, error) {
+func (c *Client) ResolveCardBIN(bin int) (Response, error) {
 	u := fmt.Sprintf("/decision/bin/%d", bin)
-	resp := &Response{}
-	err := c.Call("GET", u, nil, resp)
+	resp := Response{}
+	err := c.Call("GET", u, nil, &resp)
 
 	return resp, err
 }
 
-func (c *Client) CheckBalance(bin int) (*Response, error) {
-	resp := &Response{}
-	err := c.Call("GET", "balance", nil, resp)
+func (c *Client) CheckBalance() (Response, error) {
+	resp := Response{}
+	err := c.Call("GET", "balance", nil, &resp)
+	// check balance 'data' node is an array
+	resp2 := resp["data"].([]interface{})[0].(map[string]interface{})
+	return resp2, err
+}
+
+func (c *Client) GetSessionTimeout() (Response, error) {
+	resp := Response{}
+	err := c.Call("GET", "/integration/payment_session_timeout", nil, &resp)
 	return resp, err
 }
 
-func (c *Client) GetSessionTimeout() (*Response, error) {
-	resp := &Response{}
-	err := c.Call("GET", "/integration/payment_session_timeout", nil, resp)
-	return resp, err
-}
-
-func (c *Client) UpdateSessionTimeout(timeout int) (*Response, error) {
+func (c *Client) UpdateSessionTimeout(timeout int) (Response, error) {
 	data := url.Values{}
 	data.Add("timeout", string(timeout))
-	resp := &Response{}
+	resp := Response{}
 	u := "/integration/payment_session_timeout"
-	err := c.Call("PUT", u, data, resp)
+	err := c.Call("PUT", u, data, &resp)
 	return resp, err
 }
 
@@ -238,7 +240,7 @@ func mapstruct(data interface{}, v interface{}) error {
 	return nil
 }
 
-func getTestKey() string {
+func mustGetTestKey() string {
 	key := os.Getenv("PAYSTACK_KEY")
 
 	if len(key) == 0 {
@@ -260,16 +262,20 @@ func responseToError(resp *http.Response, respMap Response) error {
 	return err
 }
 
-func checkResponse(respMap Response, v interface{}) error {
-	if data, ok := respMap["data"]; ok {
-		switch t := respMap["data"].(type) {
+func (c *Client) checkResponse(resp Response, v interface{}) error {
+	if c.LoggingEnabled {
+		c.Logger.Printf("Paystack response: %v\n", resp)
+	}
+
+	if data, ok := resp["data"]; ok {
+		switch t := resp["data"].(type) {
 		case map[string]interface{}:
 			return mapstruct(data, v)
 		default:
 			_ = t
-			return mapstruct(respMap, v)
+			return mapstruct(resp, v)
 		}
 	}
-	// response data does not contain data node, return anyways
-	return mapstruct(respMap, v)
+	// if response data does not contain data node, map entire response to v
+	return mapstruct(resp, v)
 }

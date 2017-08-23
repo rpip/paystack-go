@@ -22,79 +22,79 @@ type Card struct {
 	Country           string `json:"country,omitempty"`
 }
 
-type Bank struct {
+type BankAccount struct {
 	Code          string `json:"bank,omitempty"`
 	AccountNumber string `json:"account_number,omitempty"`
 }
 
 // ChargeRequest represents a Paystack charge request
 type ChargeRequest struct {
-	Email             string   `json:",omitempty"`
-	Amount            float32  `json:"amount,omitempty"`
-	Card              Card     `json:"card,omitempty"`
-	Bank              Bank     `json:"bank,omitempty"`
-	AuthorizationCode string   `json:"authorization_code,omitempty"`
-	Pin               string   `json:"pin,omitempty"`
-	Metadata          Metadata `json:"metadata,omitempty"`
+	Email             string      `json:",omitempty"`
+	Amount            float32     `json:"amount,omitempty"`
+	Card              Card        `json:"card,omitempty"`
+	Bank              BankAccount `json:"bank,omitempty"`
+	AuthorizationCode string      `json:"authorization_code,omitempty"`
+	Pin               string      `json:"pin,omitempty"`
+	Metadata          Metadata    `json:"metadata,omitempty"`
 }
 
 // Create submits a charge request using card details or bank details or authorization code
 // For more details see https://developers.paystack.co/v1.0/reference#charge
-func (s *ChargeService) Create(req *ChargeRequest) (*Response, error) {
-	resp := &Response{}
-	err := s.client.Call("POST", "/charge", req, resp)
+func (s *ChargeService) Create(req *ChargeRequest) (Response, error) {
+	resp := Response{}
+	err := s.client.Call("POST", "/charge", req, &resp)
 	return resp, err
 }
 
 // Tokenize tokenizes payment instrument before a charge
 // For more details see https://developers.paystack.co/v1.0/reference#charge-tokenize
-func (s *ChargeService) Tokenize(req *ChargeRequest) (*Response, error) {
-	resp := &Response{}
-	err := s.client.Call("POST", "/charge/tokenize", req, resp)
+func (s *ChargeService) Tokenize(req *ChargeRequest) (Response, error) {
+	resp := Response{}
+	err := s.client.Call("POST", "/charge/tokenize", req, &resp)
 	return resp, err
 }
 
 // SubmitPIN submits PIN to continue a charge
 // For more details see https://developers.paystack.co/v1.0/reference#submit-pin
-func (s *ChargeService) SubmitPIN(pin, reference string) (*Response, error) {
+func (s *ChargeService) SubmitPIN(pin, reference string) (Response, error) {
 	data := url.Values{}
 	data.Add("pin", pin)
 	data.Add("reference", reference)
-	resp := &Response{}
-	err := s.client.Call("POST", "/charge/submit_pin", data, resp)
+	resp := Response{}
+	err := s.client.Call("POST", "/charge/submit_pin", data, &resp)
 	return resp, err
 }
 
 // SubmitOTP submits OTP to continue a charge
 // For more details see https://developers.paystack.co/v1.0/reference#submit-pin
-func (s *ChargeService) SubmitOTP(otp, reference string) (*Response, error) {
+func (s *ChargeService) SubmitOTP(otp, reference string) (Response, error) {
 	data := url.Values{}
 	data.Add("pin", otp)
 	data.Add("reference", reference)
-	resp := &Response{}
-	err := s.client.Call("POST", "/charge/submit_otp", data, resp)
+	resp := Response{}
+	err := s.client.Call("POST", "/charge/submit_otp", data, &resp)
 	return resp, err
 }
 
 // SubmitPhone submits Phone when requested
 // For more details see https://developers.paystack.co/v1.0/reference#submit-pin
-func (s *ChargeService) SubmitPhone(phone, reference string) (*Response, error) {
+func (s *ChargeService) SubmitPhone(phone, reference string) (Response, error) {
 	data := url.Values{}
 	data.Add("pin", phone)
 	data.Add("reference", reference)
-	resp := &Response{}
-	err := s.client.Call("POST", "/charge/submit_phone", data, resp)
+	resp := Response{}
+	err := s.client.Call("POST", "/charge/submit_phone", data, &resp)
 	return resp, err
 }
 
 // SubmitBirthday submits Birthday when requested
 // For more details see https://developers.paystack.co/v1.0/reference#submit-pin
-func (s *ChargeService) SubmitBirthday(birthday, reference string) (*Response, error) {
+func (s *ChargeService) SubmitBirthday(birthday, reference string) (Response, error) {
 	data := url.Values{}
 	data.Add("pin", birthday)
 	data.Add("reference", reference)
-	resp := &Response{}
-	err := s.client.Call("POST", "/charge/submit_birthday", data, resp)
+	resp := Response{}
+	err := s.client.Call("POST", "/charge/submit_birthday", data, &resp)
 	return resp, err
 }
 
@@ -102,9 +102,9 @@ func (s *ChargeService) SubmitBirthday(birthday, reference string) (*Response, e
 // When you get "pending" as a charge status, wait 30 seconds or more,
 // then make a check to see if its status has changed. Don't call too early as you may get a lot more pending than you should.
 // For more details see https://developers.paystack.co/v1.0/reference#check-pending-charge
-func (s *ChargeService) Get(reference string) (*Response, error) {
+func (s *ChargeService) Get(reference string) (Response, error) {
 	u := fmt.Sprintf("/charge/%s", reference)
-	resp := &Response{}
-	err := s.client.Call("GET", u, nil, resp)
+	resp := Response{}
+	err := s.client.Call("GET", u, nil, &resp)
 	return resp, err
 }

@@ -69,29 +69,29 @@ func (s *BulkChargeService) Get(idCode string) (*BulkChargeBatch, error) {
 // Pagination parameters are available. You can also filter by status.
 // Charge statuses can be pending, success or failed.
 // For more details see https://developers.paystack.co/v1.0/reference#fetch-charges-in-a-batch
-func (s *BulkChargeService) GetBatchCharges(idCode string) (*Response, error) {
+func (s *BulkChargeService) GetBatchCharges(idCode string) (Response, error) {
 	u := fmt.Sprintf("/bulkcharge/%s/charges", idCode)
-	resp := &Response{}
-	err := s.client.Call("GET", u, nil, resp)
+	resp := Response{}
+	err := s.client.Call("GET", u, nil, &resp)
 	return resp, err
 }
 
 // PauseBulkCharge stops processing a batch
 // For more details see https://developers.paystack.co/v1.0/reference#pause-bulk-charge-batch
-func (s *BulkChargeService) PauseBulkCharge(batchCode string) (*Response, error) {
+func (s *BulkChargeService) PauseBulkCharge(batchCode string) (Response, error) {
 	u := fmt.Sprintf("/bulkcharge/pause/%s", batchCode)
-	resp := &Response{}
-	err := s.client.Call("GET", u, nil, resp)
+	resp := Response{}
+	err := s.client.Call("GET", u, nil, &resp)
 
 	return resp, err
 }
 
 // ResumeBulkCharge stops processing a batch
 // For more details see https://developers.paystack.co/v1.0/reference#resume-bulk-charge-batch
-func (s *BulkChargeService) ResumeBulkCharge(batchCode string) (*Response, error) {
+func (s *BulkChargeService) ResumeBulkCharge(batchCode string) (Response, error) {
 	u := fmt.Sprintf("/bulkcharge/resume/%s", batchCode)
-	resp := &Response{}
-	err := s.client.Call("GET", u, nil, resp)
+	resp := Response{}
+	err := s.client.Call("GET", u, nil, &resp)
 
 	return resp, err
 }
