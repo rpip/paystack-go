@@ -15,10 +15,9 @@ func TestPageCRUD(t *testing.T) {
 	}
 
 	// retrieve the page
-	// retrieve the customer
 	page, err = c.Page.Get(page.ID)
 	if err != nil {
-		t.Errorf("GET Customer returned error: %v", err)
+		t.Errorf("GET Page returned error: %v", err)
 	}
 
 	if page.Name != page1.Name {

@@ -12,10 +12,11 @@ type Plan struct {
 	UpdatedAt         string  `json:"updatedAt,omitempty"`
 	Domain            string  `json:"domain,omitempty"`
 	Integration       int     `json:"integration,omitempty"`
-	Name              string  `json:",omitempty"`
+	Name              string  `json:"name,omitempty"`
 	Description       string  `json:"description,omitempty"`
+	PlanCode          string  `json:"plan_code,omitempty"`
 	Amount            float32 `json:"amount,omitempty"`
-	Interval          float32 `json:"interval,omitempty"`
+	Interval          string  `json:"interval,omitempty"`
 	SendInvoices      bool    `json:"send_invoices,omitempty"`
 	SendSMS           bool    `json:"send_sms,omitempty"`
 	Currency          string  `json:"currency,omitempty"`
