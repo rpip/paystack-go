@@ -50,7 +50,7 @@ type Client struct {
 	Transaction  *TransactionService
 	SubAccount   *SubAccountService
 	Plan         *PlanService
-	SubScription *SubscriptionService
+	Subscription *SubscriptionService
 	Page         *PageService
 	Settlement   *SettlementService
 	Transfer     *TransferService
@@ -113,7 +113,7 @@ func NewClient(key string, httpClient *http.Client) *Client {
 	c.Transaction = (*TransactionService)(&c.common)
 	c.SubAccount = (*SubAccountService)(&c.common)
 	c.Plan = (*PlanService)(&c.common)
-	c.SubScription = (*SubscriptionService)(&c.common)
+	c.Subscription = (*SubscriptionService)(&c.common)
 	c.Page = (*PageService)(&c.common)
 	c.Settlement = (*SettlementService)(&c.common)
 	c.Transfer = (*TransferService)(&c.common)
@@ -181,11 +181,8 @@ func (c *Client) Call(method, path string, body, v interface{}) error {
 	var respMap Response
 	json.Unmarshal(respBody, &respMap)
 
-	if status, _ := respMap["status"].(bool); !status && resp.StatusCode >= 400 {
-		if c.LoggingEnabled {
-			c.Logger.Printf("Paystack error: %v\n", err)
-		}
-		return responseToError(resp, respMap)
+	if status, _ := respMap["status"].(bool); !status || resp.StatusCode >= 400 {
+		return c.responseToError(resp, respMap)
 	}
 
 	return c.checkResponse(respMap, v)
@@ -250,14 +247,17 @@ func mustGetTestKey() string {
 	return key
 }
 
-func responseToError(resp *http.Response, respMap Response) error {
+func (c *Client) responseToError(resp *http.Response, respMap Response) error {
 	err := &Error{
 		HTTPStatusCode: resp.StatusCode,
 		Message:        respMap["message"].(string),
 		URL:            resp.Request.URL,
 	}
 	if errorDetails, ok := respMap["errors"]; ok {
-		err.Errors = errorDetails.(map[string]interface{})
+		err.Details = errorDetails.(map[string]interface{})
+	}
+	if c.LoggingEnabled {
+		c.Logger.Printf("Paystack error: %+v", err)
 	}
 	return err
 }
@@ -266,7 +266,6 @@ func (c *Client) checkResponse(resp Response, v interface{}) error {
 	if c.LoggingEnabled {
 		c.Logger.Printf("Paystack response: %v\n", resp)
 	}
-
 	if data, ok := resp["data"]; ok {
 		switch t := resp["data"].(type) {
 		case map[string]interface{}:
