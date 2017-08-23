@@ -30,7 +30,7 @@ if err != nil {
 }
 
 // Get customer by ID
-client.Customers.Get(customer.ID)
+customer, err := client.Customers.Get(customer.ID)
 
 // retrieve list of plans
 ch, err := client.Plan.List()
