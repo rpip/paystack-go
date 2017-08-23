@@ -17,7 +17,7 @@ type Subscription struct {
 	Integration int    `json:"integration,omitempty"`
 	// inconsistent API response. Create returns Customer code, Fetch returns an object
 	Customer  interface{} `json:"customer,omitempty"`
-	Plan      Plan        `json:"plan,omitempty"`
+	Plan      string      `json:"plan,omitempty"`
 	StartDate string      `json:"start,omitempty"`
 	// inconsistent API response. Fetch returns string, List returns an object
 	Authorization    interface{}   `json:"authorization,omitempty"`
@@ -50,7 +50,7 @@ type SubscriptionList struct {
 
 // Create creates a new subscription
 // For more details see https://developers.paystack.co/v1.0/reference#create-subscription
-func (s *SubscriptionService) Create(subscription *Subscription) (*Subscription, error) {
+func (s *SubscriptionService) Create(subscription *SubscriptionRequest) (*Subscription, error) {
 	u := fmt.Sprintf("/subscription")
 	sub := &Subscription{}
 	err := s.client.Call("POST", u, subscription, sub)
