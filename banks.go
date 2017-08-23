@@ -51,7 +51,7 @@ func (s *BankService) ResolveBVN(bvn int) (*BVNResponse, error) {
 }
 
 func (s *BankService) ResolveAccountNumber(account_number, bank_code string) (Response, error) {
-	u := fmt.Sprintf("/bank/resolve?account_number=%d&bank_code=%d", account_number, bank_code)
+	u := fmt.Sprintf("/bank/resolve?account_number=%s&bank_code=%s", account_number, bank_code)
 	resp := Response{}
 	err := s.client.Call("GET", u, nil, &resp)
 	return resp, err

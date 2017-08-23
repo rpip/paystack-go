@@ -87,7 +87,7 @@ func (s *TransferService) Finalize(code, otp string) (Response, error) {
 	req := url.Values{}
 	req.Add("transfer_code", code)
 	req.Add("otp", otp)
-	resp := &Response{}
+	resp := Response{}
 	err := s.client.Call("POST", u, req, &resp)
 	return resp, err
 }
