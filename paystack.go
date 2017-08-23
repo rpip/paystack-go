@@ -180,7 +180,6 @@ func (c *Client) Call(method, path string, body, v interface{}) error {
 
 	var respMap Response
 	json.Unmarshal(respBody, &respMap)
-	// fmt.Printf("RESPONSE %s \n %+v", u, respMap)
 
 	if status, _ := respMap["status"].(bool); !status && resp.StatusCode >= 400 {
 		if c.LoggingEnabled {
@@ -188,6 +187,7 @@ func (c *Client) Call(method, path string, body, v interface{}) error {
 		}
 		return responseToError(resp, respMap)
 	}
+
 	return c.checkResponse(respMap, v)
 }
 
@@ -257,7 +257,7 @@ func responseToError(resp *http.Response, respMap Response) error {
 		URL:            resp.Request.URL,
 	}
 	if errorDetails, ok := respMap["errors"]; ok {
-		err.Errors = errorDetails.(map[string][]interface{})
+		err.Errors = errorDetails.(map[string]interface{})
 	}
 	return err
 }
