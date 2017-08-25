@@ -15,7 +15,7 @@ type TransactionList struct {
 // TransactionRequest represents a request to start a transaction.
 type TransactionRequest struct {
 	CallbackURL       string   `json:"callback_url,omitempty"`
-	Reference         string   `json:"reference, omitempty"`
+	Reference         string   `json:"reference,omitempty"`
 	AuthorizationCode string   `json:"authorization_code,omitempty"`
 	Currency          string   `json:"currency,omitempty"`
 	Amount            float32  `json:"amount,omitempty"`
@@ -31,7 +31,7 @@ type TransactionRequest struct {
 
 // AuthorizationRequest represents a request to enable/revoke an authorization
 type AuthorizationRequest struct {
-	Reference         string   `json:"reference, omitempty"`
+	Reference         string   `json:"reference,omitempty"`
 	AuthorizationCode string   `json:"authorization_code,omitempty"`
 	Amount            int      `json:"amount,omitempty"`
 	Currency          string   `json:"currency,omitempty"`
