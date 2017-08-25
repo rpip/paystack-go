@@ -18,7 +18,7 @@ type TransactionRequest struct {
 	Reference         string   `json:"reference, omitempty"`
 	AuthorizationCode string   `json:"authorization_code,omitempty"`
 	Currency          string   `json:"currency,omitempty"`
-	Amount            int      `json:"amount,omitempty"`
+	Amount            float32  `json:"amount,omitempty"`
 	Email             string   `json:"email,omitempty"`
 	Plan              string   `json:"plan,omitempty"`
 	InvoiceLimit      int      `json:"invoice_limit,omitempty"`
@@ -45,10 +45,10 @@ type Transaction struct {
 	ID              int                    `json:"id,omitempty"`
 	CreatedAt       string                 `json:"createdAt,omitempty"`
 	Domain          string                 `json:"domain,omitempty"`
-	Metadata        Metadata               `json:"metadata,omitempty"`
-	Status          bool                   `json:"status,omitempty"`
+	Metadata        string                 `json:"metadata,omitempty"` //TODO: why is transaction metadata a string?
+	Status          string                 `json:"status,omitempty"`
 	Reference       string                 `json:"reference,omitempty"`
-	Amount          string                 `json:"amount,omitempty"`
+	Amount          float32                `json:"amount,omitempty"`
 	Message         string                 `json:"message,omitempty"`
 	GatewayResponse string                 `json:"gateway_response,omitempty"`
 	PaidAt          string                 `json:"piad_at,omitempty"`
@@ -60,7 +60,7 @@ type Transaction struct {
 	FeesSplit       string                 `json:"fees_split,omitempty"` // TODO: confirm data type
 	Customer        Customer               `json:"customer,omitempty"`
 	Authorization   Authorization          `json:"authorization,omitempty"`
-	Plan            string                 `json:"plan,omitempty"`
+	Plan            Plan                   `json:"plan,omitempty"`
 	SubAccount      SubAccount             `json:"sub_account,omitempty"`
 }
 
@@ -91,16 +91,18 @@ type TransactionTimeline struct {
 	History        []map[string]interface{} `json:"history,omitempty"`
 }
 
-// InitializeTransaction initiates a transaction process
+// Initialize initiates a transaction process
 // For more details see https://developers.paystack.co/v1.0/reference#initialize-a-transaction
-func (s *TransactionService) InitializeTransaction(txn *TransactionRequest) (Response, error) {
+func (s *TransactionService) Initialize(txn *TransactionRequest) (Response, error) {
 	u := fmt.Sprintf("/transaction/initialize")
 	resp := Response{}
 	err := s.client.Call("POST", u, txn, &resp)
 	return resp, err
 }
 
-func (s *TransactionService) VerifyTransaction(reference string) (*Transaction, error) {
+// Verify checks that transaction with the given reference exists
+// For more details see https://api.paystack.co/transaction/verify/reference
+func (s *TransactionService) Verify(reference string) (*Transaction, error) {
 	u := fmt.Sprintf("/transaction/verify/%s", reference)
 	txn := &Transaction{}
 	err := s.client.Call("GET", u, nil, txn)
@@ -124,8 +126,8 @@ func (s *TransactionService) ListN(count, offset int) (*TransactionList, error) 
 
 // Get returns the details of a transaction.
 // For more details see https://developers.paystack.co/v1.0/reference#fetch-transaction
-func (s *TransactionService) Get(id string) (*Transaction, error) {
-	u := fmt.Sprintf("/transaction/%s", id)
+func (s *TransactionService) Get(id int) (*Transaction, error) {
+	u := fmt.Sprintf("/transaction/%d", id)
 	txn := &Transaction{}
 	err := s.client.Call("GET", u, nil, txn)
 	return txn, err

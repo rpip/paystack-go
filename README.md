@@ -68,12 +68,8 @@ customer, err := client.Customers.Get(customer.ID)
 See the test files for more examples.
 
 ## TODO
-- [ ] Documentation
-- [ ] More test cases
-- [ ] Better handling of API call errors
-- [ ] Support request context
+- [ ] Maybe support request context?
 - [ ] Test on App Engine
-- [ ] Upload godocs
 
 ## CONTRIBUTING
 Contributions are of course always welcome. The calling pattern is pretty well established, so adding new methods is relatively straightforward. Please make sure the build succeeds and the test suite passes.
