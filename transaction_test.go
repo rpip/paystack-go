@@ -40,7 +40,7 @@ func TestInitializeTransaction(t *testing.T) {
 	}
 
 	if txn1.Amount != txn.Amount {
-		t.Errorf("Expected transaction amount %d, got %+v", txn.Amount, txn1.Amount)
+		t.Errorf("Expected transaction amount %f, got %+v", txn.Amount, txn1.Amount)
 	}
 
 	if txn1.Reference == "" {
