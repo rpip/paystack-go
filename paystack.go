@@ -156,6 +156,7 @@ func (c *Client) Call(method, path string, body, v interface{}) error {
 
 	if c.LoggingEnabled {
 		c.Logger.Printf("Requesting %v %v%v\n", req.Method, req.URL.Host, req.URL.Path)
+		c.Logger.Printf("POST request data %v\n", buf)
 	}
 
 	start := time.Now()
