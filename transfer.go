@@ -9,7 +9,7 @@ import (
 // For more details see https://developers.paystack.co/v1.0/reference#create-transfer
 type TransferService service
 
-// TransactionRequest represents a request to create a transfer.
+// TransferRequest represents a request to create a transfer.
 type TransferRequest struct {
 	Source    string  `json:"source,omitempty"`
 	Amount    float32 `json:"amount,omitempty"`
@@ -18,46 +18,52 @@ type TransferRequest struct {
 	Recipient string  `json:"recipient,omitempty"`
 }
 
-type Recipient map[string]interface{}
-
 // Transfer is the resource representing your Paystack transfer.
 // For more details see https://developers.paystack.co/v1.0/reference#initiate-transfer
 type Transfer struct {
-	ID           int       `json:"id,omitempty"`
-	CreatedAt    string    `json:"createdAt,omitempty"`
-	UpdatedAt    string    `json:"updatedAt,omitempty"`
-	Domain       string    `json:"domain,omitempty"`
-	Integration  int       `json:"integration,omitempty"`
-	Source       string    `json:"source,omitempty"`
-	Amount       float32   `json:"amount,omitempty"`
-	Currency     string    `json:"currency,omitempty"`
-	Reason       string    `json:"reason,omitempty"`
-	TransferCode string    `json:"transfer_code,omitempty"`
-	Recipient    Recipient `json:"recipient,omitempty"`
-	Status       string    `json:"status,omitempty"`
+	ID           int     `json:"id,omitempty"`
+	CreatedAt    string  `json:"createdAt,omitempty"`
+	UpdatedAt    string  `json:"updatedAt,omitempty"`
+	Domain       string  `json:"domain,omitempty"`
+	Integration  int     `json:"integration,omitempty"`
+	Source       string  `json:"source,omitempty"`
+	Amount       float32 `json:"amount,omitempty"`
+	Currency     string  `json:"currency,omitempty"`
+	Reason       string  `json:"reason,omitempty"`
+	TransferCode string  `json:"transfer_code,omitempty"`
+	// Initiate returns recipient ID as recipient value, Fetch returns recipient object
+	Recipient interface{} `json:"recipient,omitempty"`
+	Status    string      `json:"status,omitempty"`
 	// confirm types for source_details and failures
 	SourceDetails interface{} `json:"source_details,omitempty"`
 	Failures      interface{} `json:"failures,omitempty"`
+	TransferredAt string      `json:"transferred_at,omitempty"`
+	TitanCode     string      `json:"titan_code,omitempty"`
 }
 
 type TransferRecipient struct {
-	ID            int      `json:"id,omitempty"`
-	CreatedAt     string   `json:"createdAt,omitempty"`
-	UpdatedAt     string   `json:"updatedAt,omitempty"`
-	Type          string   `json:",omitempty"`
-	Name          string   `json:"name,omitempty"`
-	Metadata      Metadata `json:"metadata,omitempty"`
-	AccountNumber string   `json:"account_number,omitempty"`
-	BankCode      string   `json:"bank_code,omitempty"`
-	Currency      string   `json:"currency,omitempty"`
-	Description   string   `json:"description,omitempty"`
+	ID            int                    `json:"id,omitempty"`
+	CreatedAt     string                 `json:"createdAt,omitempty"`
+	UpdatedAt     string                 `json:"updatedAt,omitempty"`
+	Type          string                 `json:",omitempty"`
+	Name          string                 `json:"name,omitempty"`
+	Metadata      Metadata               `json:"metadata,omitempty"`
+	AccountNumber string                 `json:"account_number,omitempty"`
+	BankCode      string                 `json:"bank_code,omitempty"`
+	Currency      string                 `json:"currency,omitempty"`
+	Description   string                 `json:"description,omitempty"`
+	Active        bool                   `json:"active,omitempty"`
+	Details       map[string]interface{} `json:"details,omitempty"`
+	Domain        string                 `json:"domain,omitempty"`
+	RecipientCode string                 `json:"recipient_code,omitempty"`
 }
 
 // BulkTransfer represents a Paystack bulk transfer
+// You need to disable the Transfers OTP requirement to use this endpoint
 type BulkTransfer struct {
-	Currency  string           `json:"currency,omitempty"`
-	Source    string           `json:"source,omitempty"`
-	Transfers []map[string]int `json:"transfers,omitempty"`
+	Currency  string                   `json:"currency,omitempty"`
+	Source    string                   `json:"source,omitempty"`
+	Transfers []map[string]interface{} `json:"transfers,omitempty"`
 }
 
 // TransferList is a list object for transfers.
@@ -74,7 +80,7 @@ type TransferRecipientList struct {
 
 // Initialize initiates a new transfer
 // For more details see https://developers.paystack.co/v1.0/reference#initiate-transfer
-func (s *TransferService) Initialize(req *TransferRequest) (*Transfer, error) {
+func (s *TransferService) Initiate(req *TransferRequest) (*Transfer, error) {
 	transfer := &Transfer{}
 	err := s.client.Call("POST", "/transfer", req, transfer)
 	return transfer, err
@@ -92,9 +98,10 @@ func (s *TransferService) Finalize(code, otp string) (Response, error) {
 	return resp, err
 }
 
-// Initialize initiates a new bulk transfer
+// MakeBulkTransfer initiates a new bulk transfer request
+// You need to disable the Transfers OTP requirement to use this endpoint
 // For more details see https://developers.paystack.co/v1.0/reference#initiate-bulk-transfer
-func (s *TransferService) BulkRequest(req *BulkTransfer) (Response, error) {
+func (s *TransferService) MakeBulkTransfer(req *BulkTransfer) (Response, error) {
 	u := fmt.Sprintf("/transfer")
 	resp := Response{}
 	err := s.client.Call("POST", u, req, &resp)
@@ -123,21 +130,6 @@ func (s *TransferService) ListN(count, offset int) (*TransferList, error) {
 	transfers := &TransferList{}
 	err := s.client.Call("GET", u, nil, transfers)
 	return transfers, err
-}
-
-// List returns a list of transfer recipients.
-// For more details see https://developers.paystack.co/v1.0/reference#list-transferrecipients
-func (s *TransferService) ListRecipients() (*TransferRecipientList, error) {
-	return s.ListRecipientsN(10, 0)
-}
-
-// ListN returns a list of transferrecipients
-// For more details see https://developers.paystack.co/v1.0/reference#list-transferrecipients
-func (s *TransferService) ListRecipientsN(count, offset int) (*TransferRecipientList, error) {
-	u := paginateURL("/transferrecipient", count, offset)
-	resp := &TransferRecipientList{}
-	err := s.client.Call("GET", u, nil, &resp)
-	return resp, err
 }
 
 func (s *TransferService) ResendOTP(transferCode, reason string) (Response, error) {
@@ -174,5 +166,28 @@ func (s *TransferService) FinalizeOTPDisable(otp string) (Response, error) {
 	data.Add("otp", otp)
 	resp := Response{}
 	err := s.client.Call("POST", "/transfer/disable_otp_finalize", data, &resp)
+	return resp, err
+}
+
+// Create creates a new transfer recipient
+// For more details see https://developers.paystack.co/v1.0/reference#create-transferrecipient
+func (s *TransferService) CreateRecipient(recipient *TransferRecipient) (*TransferRecipient, error) {
+	recipient1 := &TransferRecipient{}
+	err := s.client.Call("POST", "/transferrecipient", recipient, recipient1)
+	return recipient1, err
+}
+
+// List returns a list of transfer recipients.
+// For more details see https://developers.paystack.co/v1.0/reference#list-transferrecipients
+func (s *TransferService) ListRecipients() (*TransferRecipientList, error) {
+	return s.ListRecipientsN(10, 0)
+}
+
+// ListN returns a list of transfer recipients
+// For more details see https://developers.paystack.co/v1.0/reference#list-transferrecipients
+func (s *TransferService) ListRecipientsN(count, offset int) (*TransferRecipientList, error) {
+	u := paginateURL("/transferrecipient", count, offset)
+	resp := &TransferRecipientList{}
+	err := s.client.Call("GET", u, nil, &resp)
 	return resp, err
 }
