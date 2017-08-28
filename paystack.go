@@ -171,22 +171,7 @@ func (c *Client) Call(method, path string, body, v interface{}) error {
 	}
 
 	defer resp.Body.Close()
-	respBody, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		if c.LoggingEnabled {
-			c.Logger.Printf("Request to Paystack failed: %v\n", err)
-		}
-		return err
-	}
-
-	var respMap Response
-	json.Unmarshal(respBody, &respMap)
-
-	if status, _ := respMap["status"].(bool); !status || resp.StatusCode >= 400 {
-		return c.responseToError(resp, respMap)
-	}
-
-	return c.checkResponse(respMap, v)
+	return c.decodeResponse(resp, v)
 }
 
 func (c *Client) ResolveCardBIN(bin int) (Response, error) {
@@ -248,25 +233,23 @@ func mustGetTestKey() string {
 	return key
 }
 
-func (c *Client) responseToError(resp *http.Response, respMap Response) error {
-	err := &Error{
-		HTTPStatusCode: resp.StatusCode,
-		Message:        respMap["message"].(string),
-		URL:            resp.Request.URL,
-	}
-	if errorDetails, ok := respMap["errors"]; ok {
-		err.Details = errorDetails.(map[string]interface{})
-	}
-	if c.LoggingEnabled {
-		c.Logger.Printf("Paystack error: %+v", err)
-	}
-	return err
-}
+// decodeResponse decodes the JSON response from the Twitter API.
+func (c *Client) decodeResponse(httpResp *http.Response, v interface{}) error {
+	var resp Response
+	respBody, err := ioutil.ReadAll(httpResp.Body)
+	json.Unmarshal(respBody, &resp)
 
-func (c *Client) checkResponse(resp Response, v interface{}) error {
+	if status, _ := resp["status"].(bool); !status || httpResp.StatusCode >= 400 {
+		if c.LoggingEnabled {
+			c.Logger.Printf("Paystack error: %+v", err)
+		}
+		return newAPIError(httpResp)
+	}
+
 	if c.LoggingEnabled {
 		c.Logger.Printf("Paystack response: %v\n", resp)
 	}
+
 	if data, ok := resp["data"]; ok {
 		switch t := resp["data"].(type) {
 		case map[string]interface{}:
@@ -276,6 +259,6 @@ func (c *Client) checkResponse(resp Response, v interface{}) error {
 			return mapstruct(resp, v)
 		}
 	}
-	// if response data does not contain data node, map entire response to v
+	// if response data does not contain data key, map entire response to v
 	return mapstruct(resp, v)
 }

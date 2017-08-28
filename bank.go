@@ -42,7 +42,6 @@ func (s *BankService) List() (*BankList, error) {
 	return banks, err
 }
 
-// TODO: return meta data from BVN response
 func (s *BankService) ResolveBVN(bvn int) (*BVNResponse, error) {
 	u := fmt.Sprintf("/bank/resolve_bvn/%d", bvn)
 	resp := &BVNResponse{}

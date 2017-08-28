@@ -35,7 +35,7 @@ func TestSubscriptionCRUD(t *testing.T) {
 	// create the subscription
 	_, err = c.Subscription.Create(subscription1)
 	if err == nil {
-		t.Errorf("Expected CREATE Subscription to fail with aunthozized customer, got %+v", err)
+		t.Errorf("Expected CREATE Subscription to fail with aunthorized customer, got %+v", err)
 	}
 
 	// retrieve the subscription list
