@@ -59,7 +59,7 @@ type Client struct {
 	BulkCharge   *BulkChargeService
 
 	LoggingEnabled bool
-	Logger         Logger
+	Log            Logger
 }
 
 type Logger interface {
@@ -105,7 +105,7 @@ func NewClient(key string, httpClient *http.Client) *Client {
 		key:            key,
 		baseURL:        u,
 		LoggingEnabled: true,
-		Logger:         log.New(os.Stderr, "", log.LstdFlags),
+		Log:            log.New(os.Stderr, "", log.LstdFlags),
 	}
 
 	c.common.client = c
@@ -139,7 +139,7 @@ func (c *Client) Call(method, path string, body, v interface{}) error {
 
 	if err != nil {
 		if c.LoggingEnabled {
-			c.Logger.Printf("Cannot create Paystack request: %v\n", err)
+			c.Log.Printf("Cannot create Paystack request: %v\n", err)
 		}
 		return err
 	}
@@ -155,8 +155,8 @@ func (c *Client) Call(method, path string, body, v interface{}) error {
 	}
 
 	if c.LoggingEnabled {
-		c.Logger.Printf("Requesting %v %v%v\n", req.Method, req.URL.Host, req.URL.Path)
-		c.Logger.Printf("POST request data %v\n", buf)
+		c.Log.Printf("Requesting %v %v%v\n", req.Method, req.URL.Host, req.URL.Path)
+		c.Log.Printf("POST request data %v\n", buf)
 	}
 
 	start := time.Now()
@@ -167,7 +167,7 @@ func (c *Client) Call(method, path string, body, v interface{}) error {
 	}
 
 	if c.LoggingEnabled {
-		c.Logger.Printf("Completed in %v\n", time.Since(start))
+		c.Log.Printf("Completed in %v\n", time.Since(start))
 	}
 
 	defer resp.Body.Close()
@@ -241,13 +241,13 @@ func (c *Client) decodeResponse(httpResp *http.Response, v interface{}) error {
 
 	if status, _ := resp["status"].(bool); !status || httpResp.StatusCode >= 400 {
 		if c.LoggingEnabled {
-			c.Logger.Printf("Paystack error: %+v", err)
+			c.Log.Printf("Paystack error: %+v", err)
 		}
 		return newAPIError(httpResp)
 	}
 
 	if c.LoggingEnabled {
-		c.Logger.Printf("Paystack response: %v\n", resp)
+		c.Log.Printf("Paystack response: %v\n", resp)
 	}
 
 	if data, ok := resp["data"]; ok {
