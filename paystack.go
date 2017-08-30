@@ -62,10 +62,12 @@ type Client struct {
 	Log            Logger
 }
 
+// Logger interface for custom loggers
 type Logger interface {
 	Printf(format string, v ...interface{})
 }
 
+// Metadata is an key-value pairs added to Paystack API requests
 type Metadata map[string]interface{}
 
 // Response represents arbitrary response data
@@ -74,6 +76,7 @@ type Response map[string]interface{}
 // RequestValues aliased to url.Values as a workaround
 type RequestValues url.Values
 
+// MarshalJSON to handle custom JSON decoding for RequestValues
 func (v RequestValues) MarshalJSON() ([]byte, error) {
 	m := make(map[string]interface{}, 3)
 	for k, val := range v {
@@ -82,6 +85,7 @@ func (v RequestValues) MarshalJSON() ([]byte, error) {
 	return json.Marshal(m)
 }
 
+// ListMeta is pagination metadata for paginated responses from the Paystack API
 type ListMeta struct {
 	Total     int `json:"total"`
 	Skipped   int `json:"skipped"`
@@ -124,7 +128,7 @@ func NewClient(key string, httpClient *http.Client) *Client {
 	return c
 }
 
-// s.client.Call("POST", "/v1/plans", PlanRequest{}, &plan)
+// Call actually does the HTTP request to Paystack API
 func (c *Client) Call(method, path string, body, v interface{}) error {
 	var buf io.ReadWriter
 	if body != nil {
@@ -174,6 +178,7 @@ func (c *Client) Call(method, path string, body, v interface{}) error {
 	return c.decodeResponse(resp, v)
 }
 
+// ResolveCardBIN docs https://developers.paystack.co/v1.0/reference#resolve-card-bin
 func (c *Client) ResolveCardBIN(bin int) (Response, error) {
 	u := fmt.Sprintf("/decision/bin/%d", bin)
 	resp := Response{}
@@ -182,6 +187,7 @@ func (c *Client) ResolveCardBIN(bin int) (Response, error) {
 	return resp, err
 }
 
+// CheckBalance docs https://developers.paystack.co/v1.0/reference#resolve-card-bin
 func (c *Client) CheckBalance() (Response, error) {
 	resp := Response{}
 	err := c.Call("GET", "balance", nil, &resp)
@@ -190,12 +196,14 @@ func (c *Client) CheckBalance() (Response, error) {
 	return resp2, err
 }
 
+// GetSessionTimeout fetches payment session timeout
 func (c *Client) GetSessionTimeout() (Response, error) {
 	resp := Response{}
 	err := c.Call("GET", "/integration/payment_session_timeout", nil, &resp)
 	return resp, err
 }
 
+// UpdateSessionTimeout updates payment session timeout
 func (c *Client) UpdateSessionTimeout(timeout int) (Response, error) {
 	data := url.Values{}
 	data.Add("timeout", string(timeout))
@@ -234,6 +242,7 @@ func mustGetTestKey() string {
 }
 
 // decodeResponse decodes the JSON response from the Twitter API.
+// The actual response will be written to the `v` parameter
 func (c *Client) decodeResponse(httpResp *http.Response, v interface{}) error {
 	var resp Response
 	respBody, err := ioutil.ReadAll(httpResp.Body)

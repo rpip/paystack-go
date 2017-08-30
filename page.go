@@ -6,6 +6,8 @@ import "fmt"
 // For more details see https://developers.paystack.co/v1.0/reference#create-page
 type PageService service
 
+// Page represents a Paystack page
+// For more details see https://developers.paystack.co/v1.0/reference#create-page
 type Page struct {
 	ID           int                 `json:"id,omitempty"`
 	CreatedAt    string              `json:"createdAt,omitempty"`

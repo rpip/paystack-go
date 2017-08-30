@@ -9,6 +9,7 @@ import (
 // For more details see https://developers.paystack.co/v1.0/reference#charge-tokenize
 type ChargeService service
 
+// Card represents a Card object
 type Card struct {
 	Number            string `json:"card_number,omitempty"`
 	CVV               string `json:"card_cvc,omitempty"`
@@ -22,6 +23,7 @@ type Card struct {
 	Country           string `json:"country,omitempty"`
 }
 
+// BankAccount is used as bank in a charge request
 type BankAccount struct {
 	Code          string `json:"bank,omitempty"`
 	AccountNumber string `json:"account_number,omitempty"`
@@ -98,11 +100,11 @@ func (s *ChargeService) SubmitBirthday(birthday, reference string) (Response, er
 	return resp, err
 }
 
-// CheckPendingCharge returns pending charges
+// CheckPending returns pending charges
 // When you get "pending" as a charge status, wait 30 seconds or more,
 // then make a check to see if its status has changed. Don't call too early as you may get a lot more pending than you should.
 // For more details see https://developers.paystack.co/v1.0/reference#check-pending-charge
-func (s *ChargeService) Get(reference string) (Response, error) {
+func (s *ChargeService) CheckPending(reference string) (Response, error) {
 	u := fmt.Sprintf("/charge/%s", reference)
 	resp := Response{}
 	err := s.client.Call("GET", u, nil, &resp)

@@ -9,6 +9,8 @@ import (
 // For more details see https://developers.paystack.co/v1.0/reference#create-subscription
 type SubscriptionService service
 
+// Subscription represents a Paystack subscription
+// For more details see https://developers.paystack.co/v1.0/reference#create-subscription
 type Subscription struct {
 	ID          int    `json:"id,omitempty"`
 	CreatedAt   string `json:"createdAt,omitempty"`
@@ -33,6 +35,7 @@ type Subscription struct {
 	OpenInvoice      string        `json:"open_invoice,omitempty"`
 }
 
+// SubscriptionRequest represents a Paystack subscription request
 type SubscriptionRequest struct {
 	// customer code or email address
 	Customer string `json:"customer,omitempty"`
@@ -90,6 +93,8 @@ func (s *SubscriptionService) ListN(count, offset int) (*SubscriptionList, error
 	return sub, err
 }
 
+// Enable enables a subscription
+// For more details see https://developers.paystack.co/v1.0/reference#enable-subscription
 func (s *SubscriptionService) Enable(subscriptionCode, emailToken string) (Response, error) {
 	params := url.Values{}
 	params.Add("code", subscriptionCode)
@@ -99,6 +104,8 @@ func (s *SubscriptionService) Enable(subscriptionCode, emailToken string) (Respo
 	return resp, err
 }
 
+// Disable disables a subscription
+// For more details see https://developers.paystack.co/v1.0/reference#disable-subscription
 func (s *SubscriptionService) Disable(subscriptionCode, emailToken string) (Response, error) {
 	params := url.Values{}
 	params.Add("code", subscriptionCode)

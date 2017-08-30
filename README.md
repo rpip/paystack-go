@@ -67,6 +67,16 @@ customer, err := client.Customers.Get(customer.ID)
 
 See the test files for more examples.
 
+## Docker
+
+Test this library in a docker container:
+
+```bash
+$ make docker && docker run -i -t paystack:latest
+```
+
+To use a different API key, update the API key in runtests.sh file.
+
 ## TODO
 - [ ] Maybe support request context?
 - [ ] Test on App Engine

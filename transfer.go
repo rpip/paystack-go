@@ -41,6 +41,8 @@ type Transfer struct {
 	TitanCode     string      `json:"titan_code,omitempty"`
 }
 
+// TransferRecipient represents a Paystack transfer recipient
+// For more details see https://developers.paystack.co/v1.0/reference#create-transfer-recipient
 type TransferRecipient struct {
 	ID            int                    `json:"id,omitempty"`
 	CreatedAt     string                 `json:"createdAt,omitempty"`
@@ -78,7 +80,7 @@ type TransferRecipientList struct {
 	Values []TransferRecipient `json:"data,omitempty"`
 }
 
-// Initialize initiates a new transfer
+// Initiate initiates a new transfer
 // For more details see https://developers.paystack.co/v1.0/reference#initiate-transfer
 func (s *TransferService) Initiate(req *TransferRequest) (*Transfer, error) {
 	transfer := &Transfer{}
@@ -132,6 +134,8 @@ func (s *TransferService) ListN(count, offset int) (*TransferList, error) {
 	return transfers, err
 }
 
+// ResendOTP generates a new OTP and sends to customer in the event they are having trouble receiving one.
+// For more details see https://developers.paystack.co/v1.0/reference#resend-otp-for-transfer
 func (s *TransferService) ResendOTP(transferCode, reason string) (Response, error) {
 	data := url.Values{}
 	data.Add("transfer_code", transferCode)
@@ -161,6 +165,8 @@ func (s *TransferService) DisableOTP() (Response, error) {
 	return resp, err
 }
 
+// FinalizeOTPDisable finalizes disabling of OTP requirement for Transfers
+// For more details see https://developers.paystack.co/v1.0/reference#finalize-disabling-of-otp-requirement-for-transfers
 func (s *TransferService) FinalizeOTPDisable(otp string) (Response, error) {
 	data := url.Values{}
 	data.Add("otp", otp)
@@ -169,7 +175,7 @@ func (s *TransferService) FinalizeOTPDisable(otp string) (Response, error) {
 	return resp, err
 }
 
-// Create creates a new transfer recipient
+// CreateRecipient creates a new transfer recipient
 // For more details see https://developers.paystack.co/v1.0/reference#create-transferrecipient
 func (s *TransferService) CreateRecipient(recipient *TransferRecipient) (*TransferRecipient, error) {
 	recipient1 := &TransferRecipient{}
@@ -177,13 +183,13 @@ func (s *TransferService) CreateRecipient(recipient *TransferRecipient) (*Transf
 	return recipient1, err
 }
 
-// List returns a list of transfer recipients.
+// ListRecipients returns a list of transfer recipients.
 // For more details see https://developers.paystack.co/v1.0/reference#list-transferrecipients
 func (s *TransferService) ListRecipients() (*TransferRecipientList, error) {
 	return s.ListRecipientsN(10, 0)
 }
 
-// ListN returns a list of transfer recipients
+// ListRecipientsN returns a list of transfer recipients
 // For more details see https://developers.paystack.co/v1.0/reference#list-transferrecipients
 func (s *TransferService) ListRecipientsN(count, offset int) (*TransferRecipientList, error) {
 	u := paginateURL("/transferrecipient", count, offset)

@@ -47,4 +47,4 @@ deps:
 	@$(GLIDE) install
 
 docker:
-	@docker build . -t $(PROJECT)
+	@docker build . -t $(PROJECT) -f Dockerfile.test

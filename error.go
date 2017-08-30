@@ -7,12 +7,13 @@ import (
 	"net/url"
 )
 
+// APIError includes the response from the Paystack API and some HTTP request info
 type APIError struct {
-	Message        string                `json:"message,omitempty"`
-	HTTPStatusCode int                   `json:"code,omitempty"`
-	Details        PaystackErrorResponse `json:"details,omitempty"`
-	URL            *url.URL              `json:"url,omitempty"`
-	Header         http.Header           `json:"header,omitempty"`
+	Message        string        `json:"message,omitempty"`
+	HTTPStatusCode int           `json:"code,omitempty"`
+	Details        ErrorResponse `json:"details,omitempty"`
+	URL            *url.URL      `json:"url,omitempty"`
+	Header         http.Header   `json:"header,omitempty"`
 }
 
 // APIError supports the error interface
@@ -21,8 +22,8 @@ func (aerr *APIError) Error() string {
 	return string(ret)
 }
 
-// PaystackErrorResponse represents an error response from the Paystack API server
-type PaystackErrorResponse struct {
+// ErrorResponse represents an error response from the Paystack API server
+type ErrorResponse struct {
 	Status  bool                   `json:"status,omitempty"`
 	Message string                 `json:"message,omitempty"`
 	Errors  map[string]interface{} `json:"errors,omitempty"`
@@ -31,7 +32,7 @@ type PaystackErrorResponse struct {
 func newAPIError(resp *http.Response) *APIError {
 	p, _ := ioutil.ReadAll(resp.Body)
 
-	var paystackErrorResp PaystackErrorResponse
+	var paystackErrorResp ErrorResponse
 	_ = json.Unmarshal(p, &paystackErrorResp)
 	return &APIError{
 		HTTPStatusCode: resp.StatusCode,

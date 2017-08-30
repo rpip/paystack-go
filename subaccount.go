@@ -6,7 +6,7 @@ import "fmt"
 // For more details see https://developers.paystack.co/v1.0/reference#create-subaccount
 type SubAccountService service
 
-// Account is the resource representing your Paystack subaccount.
+// SubAccount is the resource representing your Paystack subaccount.
 // For more details see https://developers.paystack.co/v1.0/reference#create-subaccount
 type SubAccount struct {
 	ID                  int      `json:"id,omitempty"`

@@ -26,6 +26,7 @@ type BankList struct {
 	Values []Bank `json:"data,omitempty"`
 }
 
+// BVNResponse represents response from resolve_bvn endpoint
 type BVNResponse struct {
 	Meta struct {
 		CallsThisMonth int `json:"calls_this_month,omitempty"`
@@ -42,6 +43,7 @@ func (s *BankService) List() (*BankList, error) {
 	return banks, err
 }
 
+// ResolveBVN docs https://developers.paystack.co/v1.0/reference#resolve-bvn
 func (s *BankService) ResolveBVN(bvn int) (*BVNResponse, error) {
 	u := fmt.Sprintf("/bank/resolve_bvn/%d", bvn)
 	resp := &BVNResponse{}
@@ -49,8 +51,9 @@ func (s *BankService) ResolveBVN(bvn int) (*BVNResponse, error) {
 	return resp, err
 }
 
-func (s *BankService) ResolveAccountNumber(account_number, bank_code string) (Response, error) {
-	u := fmt.Sprintf("/bank/resolve?account_number=%s&bank_code=%s", account_number, bank_code)
+// ResolveAccountNumber docs https://developers.paystack.co/v1.0/reference#resolve-account-number
+func (s *BankService) ResolveAccountNumber(accountNumber, bankCode string) (Response, error) {
+	u := fmt.Sprintf("/bank/resolve?account_number=%s&bank_code=%s", accountNumber, bankCode)
 	resp := Response{}
 	err := s.client.Call("GET", u, nil, &resp)
 	return resp, err

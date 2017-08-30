@@ -6,6 +6,8 @@ import "fmt"
 // For more details see https://developers.paystack.co/v1.0/reference#create-plan
 type PlanService service
 
+// Plan represents a
+// For more details see https://developers.paystack.co/v1.0/reference#create-plan
 type Plan struct {
 	ID                int     `json:"id,omitempty"`
 	CreatedAt         string  `json:"createdAt,omitempty"`

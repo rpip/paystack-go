@@ -6,6 +6,8 @@ import "fmt"
 // For more details see https://developers.paystack.co/v1.0/reference#initiate-bulk-charge
 type BulkChargeService service
 
+// BulkChargeBatch represents a bulk charge batch object
+// For more details see https://developers.paystack.co/v1.0/reference#initiate-bulk-charge
 type BulkChargeBatch struct {
 	ID            int    `json:"id,omitempty"`
 	CreatedAt     string `json:"createdAt,omitempty"`
@@ -18,8 +20,14 @@ type BulkChargeBatch struct {
 	PendingCharge string `json:"pending_charge,omitempty"`
 }
 
+// BulkChargeRequest is an array of objects with authorization codes and amount
 type BulkChargeRequest struct {
-	Authorization string
+	Items []BulkItem
+}
+
+// BulkItem represents a single bulk charge request item
+type BulkItem struct {
+	Authorization string  `json:"authorization,omitempty"`
 	Amount        float32 `json:"amount,omitempty"`
 }
 
@@ -31,9 +39,9 @@ type BulkChargeBatchList struct {
 
 // Initiate initiates a new bulkcharge
 // For more details see https://developers.paystack.co/v1.0/reference#initiate-bulk-charge
-func (s *BulkChargeService) Initiate(req []*BulkChargeRequest) (*BulkChargeBatch, error) {
+func (s *BulkChargeService) Initiate(req *BulkChargeRequest) (*BulkChargeBatch, error) {
 	bulkcharge := &BulkChargeBatch{}
-	err := s.client.Call("POST", "bulkcharge", req, bulkcharge)
+	err := s.client.Call("POST", "/bulkcharge", req.Items, bulkcharge)
 	return bulkcharge, err
 }
 
@@ -64,7 +72,7 @@ func (s *BulkChargeService) Get(idCode string) (*BulkChargeBatch, error) {
 	return bulkcharge, err
 }
 
-// Get returns charges in a batch
+// GetBatchCharges returns charges in a batch
 // This endpoint retrieves the charges associated with a specified batch code.
 // Pagination parameters are available. You can also filter by status.
 // Charge statuses can be pending, success or failed.
