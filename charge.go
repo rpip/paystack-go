@@ -31,8 +31,9 @@ type BankAccount struct {
 
 // ChargeRequest represents a Paystack charge request
 type ChargeRequest struct {
-	Email             string      `json:",omitempty"`
+	Email             string      `json:"email,omitempty"`
 	Amount            float32     `json:"amount,omitempty"`
+	Birthday          string      `json:"birthday,omitempty"`
 	Card              Card        `json:"card,omitempty"`
 	Bank              BankAccount `json:"bank,omitempty"`
 	AuthorizationCode string      `json:"authorization_code,omitempty"`
