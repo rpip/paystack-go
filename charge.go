@@ -25,20 +25,20 @@ type Card struct {
 
 // BankAccount is used as bank in a charge request
 type BankAccount struct {
-	Code          string `json:"bank,omitempty"`
+	Code          string `json:"code,omitempty"`
 	AccountNumber string `json:"account_number,omitempty"`
 }
 
 // ChargeRequest represents a Paystack charge request
 type ChargeRequest struct {
-	Email             string      `json:"email,omitempty"`
-	Amount            float32     `json:"amount,omitempty"`
-	Birthday          string      `json:"birthday,omitempty"`
-	Card              Card        `json:"card,omitempty"`
-	Bank              BankAccount `json:"bank,omitempty"`
-	AuthorizationCode string      `json:"authorization_code,omitempty"`
-	Pin               string      `json:"pin,omitempty"`
-	Metadata          Metadata    `json:"metadata,omitempty"`
+	Email             string       `json:"email,omitempty"`
+	Amount            float32      `json:"amount,omitempty"`
+	Birthday          string       `json:"birthday,omitempty"`
+	Card              *Card        `json:"card,omitempty"`
+	Bank              *BankAccount `json:"bank,omitempty"`
+	AuthorizationCode string       `json:"authorization_code,omitempty"`
+	Pin               string       `json:"pin,omitempty"`
+	Metadata          *Metadata    `json:"metadata,omitempty"`
 }
 
 // Create submits a charge request using card details or bank details or authorization code
