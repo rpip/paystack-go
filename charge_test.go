@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-func TestChargeService_Create(t *testing.T) {
+func TestChargeServiceCreate(t *testing.T) {
 	bankAccount := BankAccount{
 		Code:          "057",
 		AccountNumber: "0000000000",
@@ -17,9 +17,9 @@ func TestChargeService_Create(t *testing.T) {
 		Birthday: "1999-12-31",
 	}
 
-	resp, error := c.Charge.Create(&charge)
-	if error != nil {
-		t.Error(error)
+	resp, err := c.Charge.Create(&charge)
+	if err != nil {
+		t.Errorf("Create Charge returned error: %v", err)
 	}
 
 	if resp["reference"] == "" {
@@ -27,7 +27,7 @@ func TestChargeService_Create(t *testing.T) {
 	}
 }
 
-func TestChargeService_CheckPending(t *testing.T) {
+func TestChargeServiceCheckPending(t *testing.T) {
 	bankAccount := BankAccount{
 		Code:          "057",
 		AccountNumber: "0000000000",
@@ -40,18 +40,18 @@ func TestChargeService_CheckPending(t *testing.T) {
 		Birthday: "1999-12-31",
 	}
 
-	resp, error := c.Charge.Create(&charge)
-	if error != nil {
-		t.Error(error)
+	resp, err := c.Charge.Create(&charge)
+	if err != nil {
+		t.Errorf("Create charge returned error: %v", err)
 	}
 
 	if resp["reference"] == "" {
 		t.Error("Missing charge reference")
 	}
 
-	resp2, error := c.Charge.CheckPending(resp["reference"].(string))
-	if error != nil {
-		t.Error(error)
+	resp2, err := c.Charge.CheckPending(resp["reference"].(string))
+	if err != nil {
+		t.Errorf("Check pending charge returned error: %v", err)
 	}
 
 	if resp2["status"] == "" {
