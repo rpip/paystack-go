@@ -12,14 +12,21 @@ func TestBankList(t *testing.T) {
 }
 
 func TestResolveBVN(t *testing.T) {
-	resp, err := c.Bank.ResolveBVN(21212917741)
-	// Should fail. Server response: Your balance is not enough to fulfill this request
+	// Test invlaid BVN.
+	// Err not nill. Resp status code is 400
+	resp, err := c.Bank.ResolveBVN(21212917)
 	if err == nil {
-		t.Errorf("Expected error, got %+v'", resp)
+		t.Errorf("Expected error for invalid BVN, got %+v'", resp)
 	}
-	//if len(resp.BVN) == 0 {
-	//	t.Errorf("Expected response to contain bvn")
-	//}
+
+	// Test free calls limit
+	// Error is nil
+	// &{Meta:{CallsThisMonth:0 FreeCallsLeft:0} BVN:cZ+MKrsLAqJCUi+hxIdQqw==}’
+	resp, err = c.Bank.ResolveBVN(21212917741)
+	if resp.Meta.FreeCallsLeft != 0 {
+		t.Errorf("Expected free calls limit exceeded, got %+v'", resp)
+	}
+	// TODO(yao): Reproduce error: Your balance is not enough to fulfill this request
 }
 
 func TestResolveAccountNumber(t *testing.T) {
