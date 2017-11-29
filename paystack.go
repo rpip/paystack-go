@@ -225,10 +225,11 @@ func mapstruct(data interface{}, v interface{}) error {
 		WeaklyTypedInput: true,
 	}
 	decoder, err := mapstructure.NewDecoder(config)
-	if err = decoder.Decode(data); err != nil {
+	if err != nil {
 		return err
 	}
-	return nil
+	err = decoder.Decode(data);
+	return err
 }
 
 func mustGetTestKey() string {
