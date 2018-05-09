@@ -152,11 +152,7 @@ func (c *Client) Call(method, path string, body, v interface{}) error {
 		req.Header.Set("Content-Type", "application/json")
 	}
 	req.Header.Set("Authorization", "Bearer "+c.key)
-	if ua := req.Header.Get("User-Agent"); ua == "" {
-		req.Header.Set("User-Agent", userAgent)
-	} else {
-		req.Header.Set("User-Agent", userAgent+" "+ua)
-	}
+	req.Header.Set("User-Agent", userAgent)
 
 	if c.LoggingEnabled {
 		c.Log.Printf("Requesting %v %v%v\n", req.Method, req.URL.Host, req.URL.Path)
@@ -228,7 +224,7 @@ func mapstruct(data interface{}, v interface{}) error {
 	if err != nil {
 		return err
 	}
-	err = decoder.Decode(data);
+	err = decoder.Decode(data)
 	return err
 }
 
