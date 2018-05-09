@@ -26,7 +26,8 @@ const (
 	baseURL = "https://api.paystack.co"
 
 	// User agent used when communicating with the Paystack API.
-	userAgent = "paystack-go/" + version
+	// userAgent = "paystack-go/" + version
+	userAgent = "Mozilla/5.0 (Unknown; Linux) AppleWebKit/538.1 (KHTML, like Gecko) Chrome/v1.0.0 Safari/538.1"
 )
 
 type service struct {
