@@ -6,6 +6,10 @@ paystack-go is a Go client library for accessing the Paystack API.
 
 Where possible, the services available on the client groups the API into logical chunks and correspond to the structure of the Paystack API documentation at https://developers.paystack.co/v1.0/reference.
 
+## NOTE
+
+I haven't personally used this library since early 2018. I no longer actively maintain this project. My apologies to those of you who have come to rely on this library. If you are interested in becoming the new maintainer, send me an email and we can discuss yao [at] adzaku [dot] com. 
+
 ## Usage
 
 ``` go
