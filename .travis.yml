@@ -1,13 +1,8 @@
 language: go
 go:
-  - 1.6
-  - 1.7
-  - 1.8
+  - 1.14.x
+  - 1.15.x
   - master 
-matrix:
-  allow_failures:
-    - go: tip
-  fast_finish: true
 install:
   - go get github.com/golang/lint/golint
   - go get github.com/Masterminds/glide
