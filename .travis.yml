@@ -3,8 +3,8 @@ go:
   - 1.14.x
   - 1.15.x
   - master 
-install:
-  - go get github.com/golang/lint/golint
+install: 
+  - go get golang.org/x/lint/golint
   - go get github.com/Masterminds/glide
 script:
   - make deps
