@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/mitchellh/mapstructure"
@@ -203,7 +204,7 @@ func (c *Client) GetSessionTimeout() (Response, error) {
 // UpdateSessionTimeout updates payment session timeout
 func (c *Client) UpdateSessionTimeout(timeout int) (Response, error) {
 	data := url.Values{}
-	data.Add("timeout", string(timeout))
+	data.Add("timeout", strconv.Itoa(timeout))
 	resp := Response{}
 	u := "/integration/payment_session_timeout"
 	err := c.Call("PUT", u, data, &resp)
