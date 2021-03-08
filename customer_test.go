@@ -16,7 +16,7 @@ func TestCustomerCRUD(t *testing.T) {
 	}
 
 	// retrieve the customer
-	customer, err = c.Customer.Get(customer.ID)
+	customer, err = c.Customer.Get(customer.CustomerCode)
 	if err != nil {
 		t.Errorf("GET Customer returned error: %v", err)
 	}
