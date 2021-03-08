@@ -6,5 +6,4 @@ go:
 install: 
   - go get golang.org/x/lint/golint
 script:
-  - make deps
   - make
