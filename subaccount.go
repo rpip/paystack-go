@@ -37,12 +37,11 @@ type SubAccountList struct {
 }
 
 // Create creates a new subaccount
-// For more details see https://developers.paystack.co/v1.0/reference#create-subaccount
+// For more details see https://paystack.com/docs/api/#subaccount-create
 func (s *SubAccountService) Create(subaccount *SubAccount) (*SubAccount, error) {
 	u := fmt.Sprintf("/subaccount")
 	acc := &SubAccount{}
 	err := s.client.Call("POST", u, subaccount, acc)
-
 	return acc, err
 }
 
