@@ -70,11 +70,11 @@ func (s *SubAccountService) Get(id int) (*SubAccount, error) {
 // List returns a list of subaccounts.
 // For more details see https://developers.paystack.co/v1.0/reference#list-subaccounts
 func (s *SubAccountService) List() (*SubAccountList, error) {
-	return s.ListN(10, 0)
+	return s.ListN(10, 1)
 }
 
 // ListN returns a list of subaccounts
-// For more details see https://developers.paystack.co/v1.0/reference#list-subaccounts
+// For more details see https://paystack.com/docs/api/#subaccount-list
 func (s *SubAccountService) ListN(count, offset int) (*SubAccountList, error) {
 	u := paginateURL("/subaccount", count, offset)
 	acc := &SubAccountList{}
