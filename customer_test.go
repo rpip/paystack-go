@@ -1,6 +1,8 @@
 package paystack
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestCustomerCRUD(t *testing.T) {
 	cust := &Customer{

@@ -82,11 +82,15 @@ func (s *CustomerService) ListN(count, offset int) (*CustomerList, error) {
 // SetRiskAction can be used to either whitelist or blacklist a customer
 // For more details see https://developers.paystack.co/v1.0/reference#whiteblacklist-customer
 func (s *CustomerService) SetRiskAction(customerCode, riskAction string) (*Customer, error) {
-	params := url.Values{}
-	params.Add("customer", customerCode)
-	params.Add("risk_action", riskAction)
+	reqBody := struct {
+		Customer    string `json:"customer"`
+		Risk_action string `json:"risk_action"`
+	}{
+		Customer:    customerCode,
+		Risk_action: riskAction,
+	}
 	cust := &Customer{}
-	err := s.client.Call("POST", "/customer/set_risk_action", params, cust)
+	err := s.client.Call("POST", "/customer/set_risk_action", reqBody, cust)
 
 	return cust, err
 }
