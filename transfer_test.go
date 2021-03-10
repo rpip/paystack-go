@@ -22,7 +22,7 @@ func TestInitiateTransfer(t *testing.T) {
 	req := &TransferRequest{
 		Source:    "balance",
 		Reason:    "Delivery pickup",
-		Amount:    30,
+		Amount:    300,
 		Recipient: recipient1.RecipientCode,
 	}
 
