@@ -1,6 +1,8 @@
 package paystack
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestInitiateTransfer(t *testing.T) {
 	c.Transfer.EnableOTP()

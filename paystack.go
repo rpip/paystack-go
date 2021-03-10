@@ -250,6 +250,7 @@ func (c *Client) decodeResponse(httpResp *http.Response, v interface{}) error {
 	if status, _ := resp["status"].(bool); !status || httpResp.StatusCode >= 400 {
 		if c.LoggingEnabled {
 			c.Log.Printf("Paystack error: %+v", err)
+			c.Log.Printf("HTTP Response: %+v", resp)
 		}
 		return newAPIError(httpResp)
 	}
