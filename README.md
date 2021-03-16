@@ -1,4 +1,4 @@
-[![GoDoc](http://img.shields.io/badge/godoc-reference-blue.svg)](http://godoc.org/github.com/rpip/paystack-go) [![Build Status](https://travis-ci.org/rpip/paystack-go.svg?branch=master)](https://travis-ci.org/rpip/paystack-go)
+[![GoDoc](http://img.shields.io/badge/godoc-reference-blue.svg)](http://godoc.org/github.com/rpip/paystack-go) [![Build Status](https://travis-ci.com/Obayanju/paystack-go.svg?branch=master)](https://travis-ci.com/github/Obayanju/paystack-go)
 
 # Go library for the Paystack API.
 
