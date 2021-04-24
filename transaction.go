@@ -112,9 +112,9 @@ func (s *TransactionService) Verify(reference string) (*Transaction, error) {
 }
 
 // List returns a list of transactions.
-// For more details see https://developers.paystack.co/v1.0/reference#list-transactions
+// For more details see https://paystack.com/docs/api/#transaction-list
 func (s *TransactionService) List() (*TransactionList, error) {
-	return s.ListN(10, 0)
+	return s.ListN(10, 1)
 }
 
 // ListN returns a list of transactions

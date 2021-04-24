@@ -5,8 +5,8 @@ import "testing"
 func TestSubAccountCRUD(t *testing.T) {
 	subAccount1 := &SubAccount{
 		BusinessName:     "Sunshine Studios",
-		SettlementBank:   "Access Bank",
-		AccountNumber:    "01932",
+		SettlementBank:   "044",
+		AccountNumber:    "0193278965",
 		PercentageCharge: 18.2,
 	}
 

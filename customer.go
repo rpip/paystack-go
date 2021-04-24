@@ -55,9 +55,9 @@ func (s *CustomerService) Update(customer *Customer) (*Customer, error) {
 }
 
 // Get returns the details of a customer.
-// For more details see https://developers.paystack.co/v1.0/reference#fetch-customer
-func (s *CustomerService) Get(id int) (*Customer, error) {
-	u := fmt.Sprintf("/customer/%d", id)
+// For more details see https://paystack.com/docs/api/#customer-fetch
+func (s *CustomerService) Get(customerCode string) (*Customer, error) {
+	u := fmt.Sprintf("/customer/%s", customerCode)
 	cust := &Customer{}
 	err := s.client.Call("GET", u, nil, cust)
 
@@ -82,11 +82,15 @@ func (s *CustomerService) ListN(count, offset int) (*CustomerList, error) {
 // SetRiskAction can be used to either whitelist or blacklist a customer
 // For more details see https://developers.paystack.co/v1.0/reference#whiteblacklist-customer
 func (s *CustomerService) SetRiskAction(customerCode, riskAction string) (*Customer, error) {
-	params := url.Values{}
-	params.Add("customer", customerCode)
-	params.Add("risk_action", riskAction)
+	reqBody := struct {
+		Customer    string `json:"customer"`
+		Risk_action string `json:"risk_action"`
+	}{
+		Customer:    customerCode,
+		Risk_action: riskAction,
+	}
 	cust := &Customer{}
-	err := s.client.Call("POST", "/customer/set_risk_action", params, cust)
+	err := s.client.Call("POST", "/customer/set_risk_action", reqBody, cust)
 
 	return cust, err
 }

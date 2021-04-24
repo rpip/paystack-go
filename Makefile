@@ -6,9 +6,6 @@ PREFIX?=$(shell pwd)
 BUILDTAGS=
 GLIDE = $(shell which glide)
 
-# Paystack test key
-PAYSTACK_KEY=sk_test_b748a89ad84f35c2f1a8b81681f956274de048bb
-
 .PHONY: clean all fmt vet lint build test static deps docker
 .DEFAULT: default
 
