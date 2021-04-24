@@ -80,8 +80,6 @@ Test this library in a docker container:
 $ make docker && docker run -e PAYSTACK_KEY -i -t paystack:latest
 ```
 
-To use a different API key, update the API key in runtests.sh file.
-
 ## TODO
 - [ ] Maybe support request context?
 - [ ] Test on App Engine
