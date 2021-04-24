@@ -186,7 +186,7 @@ func (s *TransferService) CreateRecipient(recipient *TransferRecipient) (*Transf
 // ListRecipients returns a list of transfer recipients.
 // For more details see https://developers.paystack.co/v1.0/reference#list-transferrecipients
 func (s *TransferService) ListRecipients() (*TransferRecipientList, error) {
-	return s.ListRecipientsN(10, 0)
+	return s.ListRecipientsN(10, 1)
 }
 
 // ListRecipientsN returns a list of transfer recipients

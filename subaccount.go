@@ -37,12 +37,11 @@ type SubAccountList struct {
 }
 
 // Create creates a new subaccount
-// For more details see https://developers.paystack.co/v1.0/reference#create-subaccount
+// For more details see https://paystack.com/docs/api/#subaccount-create
 func (s *SubAccountService) Create(subaccount *SubAccount) (*SubAccount, error) {
 	u := fmt.Sprintf("/subaccount")
 	acc := &SubAccount{}
 	err := s.client.Call("POST", u, subaccount, acc)
-
 	return acc, err
 }
 
@@ -71,11 +70,11 @@ func (s *SubAccountService) Get(id int) (*SubAccount, error) {
 // List returns a list of subaccounts.
 // For more details see https://developers.paystack.co/v1.0/reference#list-subaccounts
 func (s *SubAccountService) List() (*SubAccountList, error) {
-	return s.ListN(10, 0)
+	return s.ListN(10, 1)
 }
 
 // ListN returns a list of subaccounts
-// For more details see https://developers.paystack.co/v1.0/reference#list-subaccounts
+// For more details see https://paystack.com/docs/api/#subaccount-list
 func (s *SubAccountService) ListN(count, offset int) (*SubAccountList, error) {
 	u := paginateURL("/subaccount", count, offset)
 	acc := &SubAccountList{}
