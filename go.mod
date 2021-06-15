@@ -1,4 +1,4 @@
-module github.com/rpip/paystack-go
+module github.com/elvis-chuks/paystack-go
 
 go 1.16
 
