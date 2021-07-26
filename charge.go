@@ -11,8 +11,8 @@ type ChargeService service
 
 // Card represents a Card object
 type Card struct {
-	Number            string `json:"card_number,omitempty"`
-	CVV               string `json:"card_cvc,omitempty"`
+	Number            string `json:"number,omitempty"`
+	CVV               string `json:"cvv,omitempty"`
 	ExpirtyMonth      string `json:"expiry_month,omitempty"`
 	ExpiryYear        string `json:"expiry_year,omitempty"`
 	AddressLine1      string `json:"address_line1,omitempty"`
