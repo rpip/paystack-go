@@ -9,16 +9,20 @@ Where possible, the services available on the client groups the API into logical
 ## Usage
 
 ``` go
-import "github.com/rpip/paystack-go"
+import (
+    "github.com/rpip/paystack-go"
+    "strconv"
+    "fmt"
+)
 
 apiKey := "sk_test_b748a89ad84f35c2f1a8b81681f956274de048bb"
 
 // second param is an optional http client, allowing overriding of the HTTP client to use.
 // This is useful if you're running in a Google AppEngine environment
 // where the http.DefaultClient is not available.
-client := paystack.NewClient(apiKey)
+client := paystack.NewClient(apiKey,nil)
 
-recipient := &TransferRecipient{
+recipient := &paystack.TransferRecipient{
     Type:          "Nuban",
     Name:          "Customer 1",
     Description:   "Demo customer",
@@ -30,7 +34,7 @@ recipient := &TransferRecipient{
 
 recipient1, err := client.Transfer.CreateRecipient(recipient)
 
-req := &TransferRequest{
+req := &paystack.TransferRequest{
     Source:    "balance",
     Reason:    "Delivery pickup",
     Amount:    30,
@@ -46,10 +50,10 @@ if err != nil {
 plans, err := client.Plan.List()
 
 for i, plan := range plans.Values {
-  fmt.Printf("%+v", plan)
+fmt.Printf("%+v", plan)
 }
 
-cust := &Customer{
+cust := &paystack.Customer{
     FirstName: "User123",
     LastName:  "AdminUser",
     Email:     "user123@gmail.com",
@@ -62,7 +66,7 @@ if err != nil {
 }
 
 // Get customer by ID
-customer, err := client.Customers.Get(customer.ID)
+customer, err = client.Customer.Get(strconv.Itoa(customer.ID))
 ```
 
 See the test files for more examples.
