@@ -26,13 +26,29 @@ type BankList struct {
 	Values []Bank `json:"data,omitempty"`
 }
 
-// BVNResponse represents response from resolve_bvn endpoint
+type BVNRequest struct {
+	BVN           string `json:"bvn,omitempty"`
+	AccountNumber string `json:"account_number,omitempty"`
+	BankCode      string `json:"bank_code,omitempty"`
+	FirstName     string `json:"first_name,omitempty"`
+	LastName      string `json:"last_name,omitempty"`
+	MiddleName    string `json:"middle_name,omitempty"`
+}
+
+// BVNResponse represents response from match bvn endpoint
 type BVNResponse struct {
+	Data struct {
+		BVN           string `json:"bvn,omitempty"`
+		IsBlacklisted bool   `json:"is_blacklisted,omitempty"`
+		AccountNumber bool   `json:"account_number,omitempty"`
+		FirstName     bool   `json:"first_name,omitempty"`
+		MiddleName    bool   `json:"middle_name,omitempty"`
+		LastName      bool   `json:"last_name,omitempty"`
+	}
 	Meta struct {
 		CallsThisMonth int `json:"calls_this_month,omitempty"`
 		FreeCallsLeft  int `json:"free_calls_left,omitempty"`
 	}
-	BVN string
 }
 
 // List returns a list of all the banks.
@@ -43,11 +59,10 @@ func (s *BankService) List() (*BankList, error) {
 	return banks, err
 }
 
-// ResolveBVN docs https://developers.paystack.co/v1.0/reference#resolve-bvn
-func (s *BankService) ResolveBVN(bvn int) (*BVNResponse, error) {
-	u := fmt.Sprintf("/bank/resolve_bvn/%d", bvn)
+// MatchBVN docs https://paystack.com/docs/identity-verification/verify-bvn-match/
+func (s *BankService) MatchBVN(req *BVNRequest) (*BVNResponse, error) {
 	resp := &BVNResponse{}
-	err := s.client.Call("GET", u, nil, resp)
+	err := s.client.Call("POST", "/bvn/match", req, resp)
 	return resp, err
 }
 

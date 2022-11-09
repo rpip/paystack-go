@@ -11,10 +11,18 @@ func TestBankList(t *testing.T) {
 	}
 }
 
-func TestResolveBVN(t *testing.T) {
+func TestMatchBVN(t *testing.T) {
+	req := &BVNRequest{
+		AccountNumber: "0001234560",
+		BankCode:      "058",
+		FirstName:     "Customer",
+		LastName:      "2",
+		MiddleName:    "1",
+	}
 	// Test invlaid BVN.
 	// Err not nill. Resp status code is 400
-	resp, err := c.Bank.ResolveBVN(21212917)
+	req.BVN = "21212917"
+	resp, err := c.Bank.MatchBVN(req)
 	if err == nil {
 		t.Errorf("Expected error for invalid BVN, got %+v'", resp)
 	}
@@ -22,7 +30,8 @@ func TestResolveBVN(t *testing.T) {
 	// Test free calls limit
 	// Error is nil
 	// &{Meta:{CallsThisMonth:0 FreeCallsLeft:0} BVN:cZ+MKrsLAqJCUi+hxIdQqw==}’
-	resp, err = c.Bank.ResolveBVN(21212917741)
+	req.BVN = "21212917741"
+	resp, err = c.Bank.MatchBVN(req)
 	if resp.Meta.FreeCallsLeft != 0 {
 		t.Errorf("Expected free calls limit exceeded, got %+v'", resp)
 	}
