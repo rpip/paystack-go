@@ -1,17 +1,17 @@
 language: go
-sudo: false
 go:
-  - 1.6
-  - 1.7
-  - 1.8
-  - tip
+  - 1.14.x
+  - 1.15.x
+  - 1.16.x
+  - master
 matrix:
   allow_failures:
-    - go: tip
+    - go: master
   fast_finish: true
 install:
-  - go get github.com/golang/lint/golint
-  - go get github.com/Masterminds/glide
+  - go get golang.org/x/lint/golint
 script:
-  - make deps
   - make
+env:
+  global:
+    secure: o1hnzfdu7AnfB/CGwKXByAUIbr53TDpVgX5mLVVR35f/YsGarhpjUpmG4skKoFvGkItJLBIyJN5MkH9CiSGWdHTmQcnBKi55Wd5OFHxcQmuj58KdF+uBGgFQ5uYesXa6FfiE+n1NHT4eQkMkR7y1I5uucr13ie81vstvbeg21LDWvBBS+ySyy8UOlxIuQ9RTCIcN6tpGRO4hAncqiHduEifUc5TyU8Kv80++LC5HUgw1DRcaZ6rS5fhBlElyJgBI8tap4d/eUtLp6Baec9IQszJ7lC7SNWwTBH5MdjkQhZ0SpGCLjguWb6KR1+FsweosTDMdNXdwLLxdjCdUnRCdJo2HOIj4+6tIV8nf8MTy58HOtg2G+B77SpIPqhespqAdMwXq1DwgNDlVrcgZTJ8WxrAMeYVoozpt8OQzn9ZX/cQx1CxaD85wVeNXdyeSiF6k3eyEl6Jg1kUWTfdZglnfBMljhhuNWfyfP1yMYHpdgy+0OJSkfnOiyWoRRsXK+SakcllYuQT10oA/JqiQU0VqcHl+xXWfhaoXFTbThQ4+8fWFjJfdbricUWN7wFtcrBv4jK21BGLLQ8SsdeabtuD8eaFzvsGFypHII64WnOcJBBGph80jViJI6It6snfqoEnA9G+HTAabBvlXP0sLAxd5KcVlp4UKNYpctWzX239O1O0=

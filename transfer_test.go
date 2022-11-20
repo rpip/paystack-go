@@ -1,6 +1,8 @@
 package paystack
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestInitiateTransfer(t *testing.T) {
 	c.Transfer.EnableOTP()
@@ -9,8 +11,8 @@ func TestInitiateTransfer(t *testing.T) {
 		Type:          "Nuban",
 		Name:          "Customer 1",
 		Description:   "Demo customer",
-		AccountNumber: "0100000010",
-		BankCode:      "044",
+		AccountNumber: "0001234560",
+		BankCode:      "058",
 		Currency:      "NGN",
 		Metadata:      map[string]interface{}{"job": "Plumber"},
 	}
@@ -20,7 +22,7 @@ func TestInitiateTransfer(t *testing.T) {
 	req := &TransferRequest{
 		Source:    "balance",
 		Reason:    "Delivery pickup",
-		Amount:    30,
+		Amount:    300,
 		Recipient: recipient1.RecipientCode,
 	}
 
@@ -89,12 +91,14 @@ func TestTransferList(t *testing.T) {
 }
 
 func TestTransferRecipientList(t *testing.T) {
-	_, err := createDemoRecipients()
+	//fmt.Println("createDemoRecipients <<<<<<<")
+	//_, err := createDemoRecipients()
 
-	if err != nil {
-		t.Error(err)
-	}
+	//if err != nil {
+	//	t.Error(err)
+	//}
 
+	//fmt.Println("ListRecipients <<<<<<<")
 	// retrieve the transfer recipient list
 	recipients, err := c.Transfer.ListRecipients()
 
@@ -108,8 +112,8 @@ func createDemoRecipients() ([]*TransferRecipient, error) {
 		Type:          "Nuban",
 		Name:          "Customer 1",
 		Description:   "Demo customer",
-		AccountNumber: "0100000310",
-		BankCode:      "044",
+		AccountNumber: "0001234560",
+		BankCode:      "058",
 		Currency:      "NGN",
 		Metadata:      map[string]interface{}{"job": "Carpenter"},
 	}
@@ -118,8 +122,8 @@ func createDemoRecipients() ([]*TransferRecipient, error) {
 		Type:          "Nuban",
 		Name:          "Customer 2",
 		Description:   "Demo customer",
-		AccountNumber: "0100000210",
-		BankCode:      "044",
+		AccountNumber: "0001234560",
+		BankCode:      "058",
 		Currency:      "NGN",
 		Metadata:      map[string]interface{}{"job": "Chef"},
 	}
@@ -128,8 +132,8 @@ func createDemoRecipients() ([]*TransferRecipient, error) {
 		Type:          "Nuban",
 		Name:          "Customer 2",
 		Description:   "Demo customer",
-		AccountNumber: "0100000110",
-		BankCode:      "044",
+		AccountNumber: "0001234560",
+		BankCode:      "058",
 		Currency:      "NGN",
 		Metadata:      map[string]interface{}{"job": "Plumber"},
 	}
