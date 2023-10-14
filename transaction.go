@@ -51,7 +51,7 @@ type Transaction struct {
 	Amount          float32                `json:"amount,omitempty"`
 	Message         string                 `json:"message,omitempty"`
 	GatewayResponse string                 `json:"gateway_response,omitempty"`
-	PaidAt          string                 `json:"piad_at,omitempty"`
+	PaidAt          string                 `json:"paid_at,omitempty"`
 	Channel         string                 `json:"channel,omitempty"`
 	Currency        string                 `json:"currency,omitempty"`
 	IPAddress       string                 `json:"ip_address,omitempty"`
