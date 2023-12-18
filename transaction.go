@@ -45,7 +45,7 @@ type Transaction struct {
 	ID              int                    `json:"id,omitempty"`
 	CreatedAt       string                 `json:"createdAt,omitempty"`
 	Domain          string                 `json:"domain,omitempty"`
-	Metadata        string                 `json:"metadata,omitempty"` //TODO: why is transaction metadata a string?
+	Metadata        Metadata               `json:"metadata,omitempty"`
 	Status          string                 `json:"status,omitempty"`
 	Reference       string                 `json:"reference,omitempty"`
 	Amount          float32                `json:"amount,omitempty"`
